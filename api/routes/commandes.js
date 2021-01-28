@@ -6,7 +6,6 @@ var router = express.Router();
 router.post('/create', async (req, res) => {
     try {
         const { entreprise, nom, no_compte, telephone, courriel, po_client, vendeur, commentaire, attention } = req.body;
-        // Validation champs vides
         // Champs obligatoires
         if (vendeur == null || attention == null) {
             res.status(400).json({ "erreur": "Données invalides", "code": 1 });
@@ -20,14 +19,22 @@ router.post('/create', async (req, res) => {
             res.status(400).json({ "erreur": "Données invalides", "code": 3 });
         }
         // Validation type champs, s'il y a lieu
-        if ((entreprise != null && typeof entreprise != "string") || (nom != null && typeof nom != "string") || (no_compte != null && typeof no_compte != "number") ||
-            (telephone != null && typeof telephone != "string") || (courriel != null && typeof courriel != "string") || (po_client != null && typeof po_client != "string") ||
-            (vendeur != null && typeof vendeur != "string") || (commentaire != null && typeof commentaire != "string") || (attention != null && typeof attention != "string")) {
+        if ((entreprise && typeof entreprise != "string") || (nom && typeof nom != "string") || (no_compte && typeof no_compte != "number") ||
+            (telephone && typeof telephone != "string") || (courriel && typeof courriel != "string") || (po_client && typeof po_client != "string") ||
+            (vendeur && typeof vendeur != "string") || (commentaire && typeof commentaire != "string") || (attention && typeof attention != "string")) {
             res.status(400).json({ "erreur": "Données invalides", "code": 4 });
         }
         // Validation longueur champs
-        if ((entreprise && entreprise.length > 64) || (nom && nom.length > 64) || (telephone && telephone.length > 32) || (courriel && courriel.length > 255) ||
-            (po_client && po_client.length > 64) || (vendeur && vendeur.length > 4) || (commentaire && commentaire.length > 512) || (attention && attention.length > 255)) {
+        if ((entreprise && entreprise.length > 64) || (nom && nom.length > 64) || (no_compte && ((no_compte.toString().length > 9) || no_compte < 0 || !(Number.isInteger(no_compte)) ||
+            no_compte > Number.MAX_SAFE_INTEGER)) || (telephone && telephone.length > 32) || (courriel && courriel.length > 255) || (po_client && po_client.length > 64) ||
+            (vendeur && vendeur.length > 4) || (commentaire && commentaire.length > 512) || (attention && attention.length > 255)) {
+            res.status(400).json({ "erreur": "Données invalides", "code": 5 });
+        }
+        /**
+         * Validation adresse courriel valide
+         * @see https://www.w3resource.com/javascript/form/email-validation.php
+         */
+        if (!(/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(courriel))) {
             res.status(400).json({ "erreur": "Données invalides", "code": 5 });
         }
         // Requête
@@ -77,7 +84,6 @@ router.put('/:id', async (req, res) => {
     try {
         const { id } = req.params;
         const { entreprise, nom, no_compte, telephone, courriel, po_client, vendeur, commentaire, attention } = req.body;
-        // Validation champs vides
         // Champs obligatoires
         if (vendeur == null || attention == null) {
             res.status(400).json({ "erreur": "Données invalides", "code": 1 });
@@ -91,14 +97,22 @@ router.put('/:id', async (req, res) => {
             res.status(400).json({ "erreur": "Données invalides", "code": 3 });
         }
         // Validation type champs, s'il y a lieu
-        if ((entreprise != null && typeof entreprise != "string") || (nom != null && typeof nom != "string") || (no_compte != null && typeof no_compte != "number") ||
-            (telephone != null && typeof telephone != "string") || (courriel != null && typeof courriel != "string") || (po_client != null && typeof po_client != "string") ||
-            (vendeur != null && typeof vendeur != "string") || (commentaire != null && typeof commentaire != "string") || (attention != null && typeof attention != "string")) {
+        if ((entreprise && typeof entreprise != "string") || (nom && typeof nom != "string") || (no_compte && typeof no_compte != "number") ||
+            (telephone && typeof telephone != "string") || (courriel && typeof courriel != "string") || (po_client && typeof po_client != "string") ||
+            (vendeur && typeof vendeur != "string") || (commentaire && typeof commentaire != "string") || (attention && typeof attention != "string")) {
             res.status(400).json({ "erreur": "Données invalides", "code": 4 });
         }
         // Validation longueur champs
-        if ((entreprise && entreprise.length > 64) || (nom && nom.length > 64) || (telephone && telephone.length > 32) || (courriel && courriel.length > 255) ||
-            (po_client && po_client.length > 64) || (vendeur && vendeur.length > 4) || (commentaire && commentaire.length > 512) || (attention && attention.length > 255)) {
+        if ((entreprise && entreprise.length > 64) || (nom && nom.length > 64) || (no_compte && ((no_compte.toString().length > 9) || no_compte < 0 || !(Number.isInteger(no_compte)) ||
+            no_compte > Number.MAX_SAFE_INTEGER)) || (telephone && telephone.length > 32) || (courriel && courriel.length > 255) || (po_client && po_client.length > 64) ||
+            (vendeur && vendeur.length > 4) || (commentaire && commentaire.length > 512) || (attention && attention.length > 255)) {
+            res.status(400).json({ "erreur": "Données invalides", "code": 5 });
+        }
+        /**
+         * Validation adresse courriel valide
+         * @see https://www.w3resource.com/javascript/form/email-validation.php
+         */
+        if (!(/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(courriel))) {
             res.status(400).json({ "erreur": "Données invalides", "code": 5 });
         }
         // Requête
