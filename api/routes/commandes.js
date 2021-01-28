@@ -6,28 +6,40 @@ var router = express.Router();
 router.post('/create', async (req, res) => {
     try {
         const { entreprise, nom, no_compte, telephone, courriel, po_client, vendeur, commentaire, attention } = req.body;
-        // Validation
+        // Validation champs vides
+        // Champs obligatoires
+        if (vendeur == null || attention == null) {
+            res.status(400).json({ "erreur": "Données invalides", "code": 1 });
+        }
         // Entreprise et nom vides
         if (entreprise == null && nom == null) {
-            res.status(400);
-            res.json({ "erreur": "Données invalides", "code": 1 });
+            res.status(400).json({ "erreur": "Données invalides", "code": 2 });
         }
-        if (entreprise == null && telephone == null) {
-            res.status(400);
-            res.json({ "erreur": "Données invalides", "code": 2 });
+        // Entreprise, telephone, et courriel vides
+        if (entreprise == null && telephone == null && courriel == null) {
+            res.status(400).json({ "erreur": "Données invalides", "code": 3 });
         }
-        if (vendeur == null) {
-            res.status(400);
-            res.json({ "erreur": "Données invalides", "code": 3 });
+        // Validation type champs, s'il y a lieu
+        if ((entreprise != null && typeof entreprise != "string") || (nom != null && typeof nom != "string") || (no_compte != null && typeof no_compte != "number") ||
+            (telephone != null && typeof telephone != "string") || (courriel != null && typeof courriel != "string") || (po_client != null && typeof po_client != "string") ||
+            (vendeur != null && typeof vendeur != "string") || (commentaire != null && typeof commentaire != "string") || (attention != null && typeof attention != "string")) {
+            res.status(400).json({ "erreur": "Données invalides", "code": 4 });
+        }
+        // Validation longueur champs
+        if ((entreprise && entreprise.length > 64) || (nom && nom.length > 64) || (telephone && telephone.length > 32) || (courriel && courriel.length > 255) ||
+            (po_client && po_client.length > 64) || (vendeur && vendeur.length > 4) || (commentaire && commentaire.length > 512) || (attention && attention.length > 255)) {
+            res.status(400).json({ "erreur": "Données invalides", "code": 5 });
         }
         // Requête
-        const nouvCommande = await pool.query(
-            "INSERT INTO commandes (entreprise, nom, no_compte, telephone, courriel, po_client, vendeur, commentaire, attention) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *",
-            [entreprise, nom, no_compte, telephone, courriel, po_client, vendeur, commentaire, attention]
-        );
-        // Succès
-        res.json(nouvCommande.rows);
-        console.log("Success POST.");
+        else {
+            const nouvCommande = await pool.query(
+                "INSERT INTO commandes (entreprise, nom, no_compte, telephone, courriel, po_client, vendeur, commentaire, attention) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *",
+                [entreprise, nom, no_compte, telephone, courriel, po_client, vendeur, commentaire, attention]
+            );
+            // Succès
+            res.json(nouvCommande.rows);
+            console.log("Success POST.");
+        }
     } catch (error) {
         console.log(error.message);
     }
@@ -65,16 +77,40 @@ router.put('/:id', async (req, res) => {
     try {
         const { id } = req.params;
         const { entreprise, nom, no_compte, telephone, courriel, po_client, vendeur, commentaire, attention } = req.body;
-        // Validation
-
+        // Validation champs vides
+        // Champs obligatoires
+        if (vendeur == null || attention == null) {
+            res.status(400).json({ "erreur": "Données invalides", "code": 1 });
+        }
+        // Entreprise et nom vides
+        if (entreprise == null && nom == null) {
+            res.status(400).json({ "erreur": "Données invalides", "code": 2 });
+        }
+        // Entreprise, telephone, et courriel vides
+        if (entreprise == null && telephone == null && courriel == null) {
+            res.status(400).json({ "erreur": "Données invalides", "code": 3 });
+        }
+        // Validation type champs, s'il y a lieu
+        if ((entreprise != null && typeof entreprise != "string") || (nom != null && typeof nom != "string") || (no_compte != null && typeof no_compte != "number") ||
+            (telephone != null && typeof telephone != "string") || (courriel != null && typeof courriel != "string") || (po_client != null && typeof po_client != "string") ||
+            (vendeur != null && typeof vendeur != "string") || (commentaire != null && typeof commentaire != "string") || (attention != null && typeof attention != "string")) {
+            res.status(400).json({ "erreur": "Données invalides", "code": 4 });
+        }
+        // Validation longueur champs
+        if ((entreprise && entreprise.length > 64) || (nom && nom.length > 64) || (telephone && telephone.length > 32) || (courriel && courriel.length > 255) ||
+            (po_client && po_client.length > 64) || (vendeur && vendeur.length > 4) || (commentaire && commentaire.length > 512) || (attention && attention.length > 255)) {
+            res.status(400).json({ "erreur": "Données invalides", "code": 5 });
+        }
         // Requête
-        const modCommande = await pool.query(
-            "UPDATE commandes SET entreprise = $1, nom = $2, no_compte = $3, telephone = $4, courriel = $5, po_client = $6, vendeur = $7, commentaire = $8, attention = $9 WHERE id = $10 RETURNING *",
-            [entreprise, nom, no_compte, telephone, courriel, po_client, vendeur, commentaire, attention, id]
-        );
-        // Succès
-        res.json(modCommande.rows);
-        console.log("Success PUT.");
+        else {
+            const modCommande = await pool.query(
+                "UPDATE commandes SET entreprise = $1, nom = $2, no_compte = $3, telephone = $4, courriel = $5, po_client = $6, vendeur = $7, commentaire = $8, attention = $9, date_modification = CURRENT_TIMESTAMP WHERE id = $10 RETURNING *",
+                [entreprise, nom, no_compte, telephone, courriel, po_client, vendeur, commentaire, attention, id]
+            );
+            // Succès
+            res.json(modCommande.rows);
+            console.log("Success PUT.");
+        }
     } catch (error) {
         console.log(error.message);
     }
