@@ -1,11 +1,10 @@
 const express = require('express');
+const pool = require('./db');
 
 // Fichiers de routes à part
 var commandes = require('./routes/commandes');
 var produits = require('./routes/produits');
 var etats = require('./routes/etats');
-
-const pool = require('./db');
 
 const app = express();
 app.use(express.json());
