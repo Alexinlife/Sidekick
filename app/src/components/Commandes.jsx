@@ -11,7 +11,7 @@ class Commandes extends React.Component {
           <NavBar />
         </header>
         <div className="content">
-          <h1>Hey</h1>
+          <h1>Bienvenue !</h1>
         </div>
       </div>
     );

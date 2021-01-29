@@ -2,12 +2,17 @@
 html, body {
     background-color: #333333;
     color: white;
+    text-align: center;
 }
 
+/* Contenu en-dessous de la navbar */
 .content {
     min-height: 100vh;
+    margin-left: 2%;
+    margin-right: 2%;
 }
 
+/* Logo (la seule image) */
 img {
     object-fit: scale-down;
     max-height: 50px;
