@@ -37,6 +37,7 @@ router.post('/create', async (req, res) => {
         if (!(/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(courriel))) {
             res.status(400).json({ "erreur": "Données invalides", "code": 5 });
         }
+        // TODO: Utiliser cette librairie pour une validation plus clean
         // Requête
         else {
             const nouvCommande = await pool.query(
