@@ -1,0 +1,30 @@
+/* Par défaut */
+html, body {
+    background-color: #333333;
+    color: white;
+}
+
+.content {
+    min-height: 100vh;
+}
+
+img {
+    object-fit: scale-down;
+    max-height: 50px;
+}
+
+/* Pour les écrans d'iPhone 6, 7 et X */
+@media only screen and (max-width: 500px) {
+    img {
+        object-fit: scale-down;
+        max-height: 40px;
+    }
+}
+
+/* Pour les écrans encore plus petits */
+@media only screen and (max-width: 375px) {
+    img {
+        object-fit: scale-down;
+        max-height: 20px;
+    }
+}
