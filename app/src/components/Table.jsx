@@ -1,5 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import '../css/Style.css';
+import axios from 'axios';
+// Composants Material-UI
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -16,17 +18,17 @@ const useStyles = makeStyles({
   },
 });
 
-function createData(id, entreprise, nom, po, vendeur, modification, creation) {
-  return { id, entreprise, nom, po, vendeur, modification, creation };
+async function getCommandes() {try {
+    const response = await axios.get('http://localhost:5000/api/commandes/');
+    console.log(response);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
 }
 
-const rows = [
-  createData(1, "Cascades", "Moi", "5432", "AL", 'Jamais', 'Ajourd\'hui'),
-  createData(2, "Pièces d'auto Victo", "Moi", "4000RPM", "AL", 'Jamais', 'Ajourd\'hui'),
-  createData(3, "Jimssy", "Moi", "toto", "AL", 'Jamais', 'Ajourd\'hui'),
-];
-
-export default function BasicTable() {
+export default function Commandes() {
+  const [commandes, setCommandes] = useState([]);
   const classes = useStyles();
 
   return (
@@ -44,7 +46,7 @@ export default function BasicTable() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row) => (
+          {commandes.map((row) => (
             <TableRow key={row.id}>
               <TableCell align="center">{row.id}</TableCell>
               <TableCell align="center">{row.entreprise}</TableCell>
@@ -60,3 +62,5 @@ export default function BasicTable() {
     </TableContainer>
   );
 }
+
+// TODO: Essayer dans une rcc
