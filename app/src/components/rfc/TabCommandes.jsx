@@ -14,12 +14,13 @@ import IconButton from '@material-ui/core/IconButton';
 import AssignmentIcon from '@material-ui/icons/Assignment';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
+// react-router-dom
+import { Link } from 'react-router-dom';
 
 export default class Tableau extends React.Component {
 
   constructor(props) {
     super();
-    this.handleCLick = this.handleCLick.bind(this);
     this.handleEdit = this.handleEdit.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
   }
@@ -43,11 +44,6 @@ export default class Tableau extends React.Component {
     } catch (error) {
       console.error(error);
     }
-  }
-
-  handleCLick(event) {
-    event.preventDefault();
-    console.log("1");
   }
 
   handleEdit(event) {
@@ -82,23 +78,25 @@ export default class Tableau extends React.Component {
             {this.state.commandes.map((row) => (
               <TableRow key={row.id}>
                 <TableCell>
-                  <IconButton edge="start" color="inherit" aria-label="menu" onClick={this.handleCLick}>
-                    <AssignmentIcon />
-                  </IconButton>
-                  <IconButton edge="start" color="inherit" aria-label="menu" onClick={this.handleEdit}>
-                    <EditIcon />
-                  </IconButton>
-                  <IconButton edge="start" color="inherit" aria-label="menu" onClick={this.handleDelete}>
-                    <DeleteIcon />
-                  </IconButton>
+                  <Link to={`/commandes/${row.id}`}>
+                    <IconButton edge="start" className="tab-icons" color="inherit" aria-label="menu">
+                      <AssignmentIcon />
+                    </IconButton>
+                    </Link>
+                    <IconButton edge="start" className="tab-icons" color="inherit" aria-label="menu" onClick={this.handleEdit}>
+                      <EditIcon />
+                    </IconButton>
+                    <IconButton edge="start" className="tab-icons" color="inherit" aria-label="menu" onClick={this.handleDelete}>
+                      <DeleteIcon />
+                    </IconButton>
                 </TableCell>
-                <TableCell align="center">{row.id}</TableCell>
-                <TableCell align="center">{row.entreprise || "-"}</TableCell>
-                <TableCell align="center">{row.nom}</TableCell>
-                <TableCell align="center">{row.po || "-"}</TableCell>
-                <TableCell align="center">{row.vendeur}</TableCell>
-                <TableCell align="center">{row.date_modification || "-"}</TableCell>
-                <TableCell align="center">{row.date_creation}</TableCell>
+                  <TableCell align="center">{row.id}</TableCell>
+                  <TableCell align="center">{row.entreprise || "-"}</TableCell>
+                  <TableCell align="center">{row.nom}</TableCell>
+                  <TableCell align="center">{row.po || "-"}</TableCell>
+                  <TableCell align="center">{row.vendeur}</TableCell>
+                  <TableCell align="center">{row.date_modification || "-"}</TableCell>
+                  <TableCell align="center">{row.date_creation}</TableCell>
               </TableRow>
             ))}
           </TableBody>

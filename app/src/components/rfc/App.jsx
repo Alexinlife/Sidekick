@@ -2,6 +2,7 @@ import '../../css/App.css';
 // Routes avec react-router-dom
 import { Route, Redirect, Switch } from 'react-router-dom';
 import Commandes from '../Commandes';
+import Commande from '../Commande';
 import CreationCommande from '../CreationCommande';
 import Notifications from '../Notifications';
 import NotFound from '../NotFound';
@@ -11,6 +12,7 @@ function App() {
   return (
     <div className="App">
       <Switch>
+        <Route path="/commandes/:id" component={Commande} />
         <Route path="/commandes" component={Commandes} />
         <Route path="/creation" component={CreationCommande} />
         <Route path="/notifications" component={Notifications} />
