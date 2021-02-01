@@ -1,23 +1,23 @@
-import logo from '../logo.svg';
 import '../css/App.css';
+// Routes avec react-router-dom
+import { Route, Redirect, Switch } from 'react-router-dom';
+import Commandes from './Commandes';
+import CreationCommande from './CreationCommande';
+import Notifications from './Notifications';
+import NotFound from './NotFound';
 
+// S'occupe des routes vers les différentes pages
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Switch>
+        <Route path="/commandes" component={Commandes} />
+        <Route path="/creation" component={CreationCommande} />
+        <Route path="/notifications" component={Notifications} />
+        <Route path="/404" component={NotFound} />
+        <Redirect path="/" exact to={"/commandes"} />
+        <Redirect to={"/404"} />
+      </Switch>
     </div>
   );
 }
