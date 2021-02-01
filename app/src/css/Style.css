@@ -18,6 +18,20 @@ img {
     max-height: 50px;
 }
 
+/* Pour les Link de react-router-dom */
+a {
+    color: white;
+}
+
+/* 404 Not Found */
+.nf {
+    font-size: 80px;
+}
+
+.nf-desc {
+    font-size: 18px;
+}
+
 /* Gestion de l'impression */
 @media print
 {    
