@@ -1,5 +1,5 @@
 import React from 'react';
-import '../css/Style.css';
+import '../../css/Style.css';
 import axios from 'axios';
 // Composants Material-UI
 import Table from '@material-ui/core/Table';
@@ -63,6 +63,7 @@ export default class Tableau extends React.Component {
   render() {
 
     return (
+
       <TableContainer component={Paper}>
         <Table className="table" aria-label="simple table">
           <TableHead>
@@ -92,7 +93,7 @@ export default class Tableau extends React.Component {
                   </IconButton>
                 </TableCell>
                 <TableCell align="center">{row.id}</TableCell>
-                <TableCell align="center">{row.entreprise}</TableCell>
+                <TableCell align="center">{row.entreprise || "-"}</TableCell>
                 <TableCell align="center">{row.nom}</TableCell>
                 <TableCell align="center">{row.po || "-"}</TableCell>
                 <TableCell align="center">{row.vendeur}</TableCell>

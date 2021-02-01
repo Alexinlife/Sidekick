@@ -1,6 +1,6 @@
 import React from 'react'
 import '../css/Style.css';
-import NavBar from './NavBar';
+import NavBar from './rfc/NavBar';
 
 export default function NotFound() {
     return (

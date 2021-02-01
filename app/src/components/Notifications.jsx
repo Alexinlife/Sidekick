@@ -1,6 +1,7 @@
 import React from 'react'
 import '../css/Style.css';
-import NavBar from './NavBar';
+import NavBar from './rfc/NavBar';
+import TabEtats from './rfc/TabEtats';
 
 export default class Notifications extends React.Component {
     render() {
@@ -9,6 +10,10 @@ export default class Notifications extends React.Component {
                 <header>
                     <NavBar />
                 </header>
+                <div className="content">
+                    <h1>Notifications</h1>
+                    <TabEtats />
+                </div>
             </div>
         )
     }

@@ -1,10 +1,10 @@
-import '../css/App.css';
+import '../../css/App.css';
 // Routes avec react-router-dom
 import { Route, Redirect, Switch } from 'react-router-dom';
-import Commandes from './Commandes';
-import CreationCommande from './CreationCommande';
-import Notifications from './Notifications';
-import NotFound from './NotFound';
+import Commandes from '../Commandes';
+import CreationCommande from '../CreationCommande';
+import Notifications from '../Notifications';
+import NotFound from '../NotFound';
 
 // S'occupe des routes vers les différentes pages
 function App() {

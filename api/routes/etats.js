@@ -52,7 +52,7 @@ router.get('/:commande_id', async (req, res) => {
 router.get('/', async (req, res) => {
     try {
         // Requête
-        const etats = await pool.query("SELECT texte, date FROM etats");
+        const etats = await pool.query("SELECT * FROM etats ORDER BY date DESC");
         // Succès
         res.json(etats.rows);
         console.log("Success GET by Order_ID.");

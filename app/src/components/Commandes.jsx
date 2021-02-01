@@ -1,7 +1,7 @@
 import React from 'react';
 import '../css/Style.css';
-import NavBar from './NavBar';
-import Tableau from './Tableau';
+import NavBar from './rfc/NavBar';
+import TabCommandes from './rfc/TabCommandes';
 
 class Commandes extends React.Component {
 
@@ -13,7 +13,7 @@ class Commandes extends React.Component {
         </header>
         <div className="content">
           <h1>Bienvenue !</h1>
-          <Tableau />
+          <TabCommandes />
         </div>
       </div>
     );

@@ -1,6 +1,6 @@
 import React from 'react';
-import '../css/Style.css';
-import logo from '../logoSidekick.png';
+import '../../css/Style.css';
+import logo from '../../logoSidekick.png';
 // Composants Material-UI
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
