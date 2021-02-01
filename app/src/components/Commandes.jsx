@@ -63,7 +63,7 @@ class Commandes extends React.Component {
           <NavBar />
         </header>
         <div className="content">
-          <h1>Bienvenue !</h1>
+          <h1>Liste des commandes</h1>
           <TableContainer component={Paper}>
             <Table className="table" aria-label="simple table">
               <TableHead>

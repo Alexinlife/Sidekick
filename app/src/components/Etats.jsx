@@ -45,21 +45,12 @@ export default class Etats extends React.Component {
                 </header>
                 <div className="content">
                     <h1>Liste des états</h1>
-                    <TableContainer component={Paper}>
+                    <TableContainer className="etats" component={Paper}>
                         <Table className="table" aria-label="simple table">
-                            <TableHead>
-                                <TableRow>
-                                    <TableCell align="center">Numéro de commande</TableCell>
-                                    <TableCell align="center">Date</TableCell>
-                                    <TableCell align="center">État</TableCell>
-                                </TableRow>
-                            </TableHead>
                             <TableBody>
                                 {this.state.commandes.map((row) => (
                                     <TableRow key={row.id}>
-                                        <TableCell align="center">{row.commande_id}</TableCell>
-                                        <TableCell align="center">{row.date}</TableCell>
-                                        <TableCell align="center">{row.texte}</TableCell>
+                                        <TableCell align="center">Commande no. {row.commande_id} : {row.texte} ({row.date})</TableCell>
                                     </TableRow>
                                 ))}
                             </TableBody>

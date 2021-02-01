@@ -27,6 +27,15 @@ a .tab-icons {
     color: black;
 }
 
+/* Section commentaires de l'affichage individuel */
+.comments-title {
+    padding-top: 1%;
+}
+
+.comments-text {
+    padding-bottom: 1%;
+}
+
 /* 404 Not Found */
 .nf {
     font-size: 80px;
