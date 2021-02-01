@@ -4,7 +4,7 @@ import { Route, Redirect, Switch } from 'react-router-dom';
 import Commandes from '../Commandes';
 import Commande from '../Commande';
 import CreationCommande from '../CreationCommande';
-import Notifications from '../Notifications';
+import Notifications from '../Etats';
 import NotFound from '../NotFound';
 
 // S'occupe des routes vers les différentes pages
