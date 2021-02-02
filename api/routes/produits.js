@@ -6,9 +6,11 @@ const Joi = require('joi');
 // Validation Joi
 const schema = Joi.object({
     code: Joi.string()
+        .allow("")
         .max(32),
 
     description: Joi.string()
+        .allow("")
         .max(255),
 
     qte_demandee: Joi.number()
@@ -21,12 +23,12 @@ const schema = Joi.object({
         .min(0.0050)
         .positive(),
 
-    commande_id: Joi.number()
+    identifiant: Joi.number()
         .integer()
         .positive()
         .required()
 })
-    .or('code', 'description')
+    .or('code', 'description');
 
 /**
  * Valide les paramètres entrés avec Joi
@@ -34,16 +36,16 @@ const schema = Joi.object({
  * @param {*} description La decription du produit à valider
  * @param {*} qte_demandee La quantité demandée du produit à valider
  * @param {*} prix Le prix du produit à valider
- * @param {*} commande_id L'identifiant de la commande à valider
+ * @param {*} identifiant L'identifiant à valider
  */
-async function validateProduit(code, description, qte_demandee, prix, commande_id) {
+async function validateProduit(code, description, qte_demandee, prix, identifiant) {
     try {
         const validation = await schema.validateAsync({
             code: code,
             description: description,
             qte_demandee: qte_demandee,
             prix: prix,
-            commande_id: commande_id
+            identifiant: identifiant
         });
         console.log(validation);
         return true;
@@ -95,7 +97,7 @@ router.put('/:id', async (req, res) => {
         const { id } = req.params;
         const { code, description, qte_demandee, prix } = req.body;
         // Requête
-        if (await validateProduit(code, description, qte_demandee, prix, commande_id)) {
+        if (await validateProduit(code, description, qte_demandee, prix, id)) {
             const modProduit = await pool.query("UPDATE produits SET code = $1, description = $2, qte_demandee = $3, prix = $4 WHERE id = $5 RETURNING *",
                 [code, description, qte_demandee, prix, id]);
             // Succès

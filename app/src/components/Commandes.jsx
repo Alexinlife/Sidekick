@@ -13,16 +13,12 @@ import Paper from '@material-ui/core/Paper';
 import IconButton from '@material-ui/core/IconButton';
 // Material-UI Icons
 import AssignmentIcon from '@material-ui/icons/Assignment';
-import EditIcon from '@material-ui/icons/Edit';
-import DeleteIcon from '@material-ui/icons/Delete';
 // react-router-dom
 import { Link } from 'react-router-dom';
 
 class Commandes extends React.Component {
   constructor(props) {
     super();
-    this.handleEdit = this.handleEdit.bind(this);
-    this.handleDelete = this.handleDelete.bind(this);
   }
 
   componentDidMount() {
@@ -44,16 +40,6 @@ class Commandes extends React.Component {
     } catch (error) {
       console.error(error);
     }
-  }
-
-  handleEdit(event) {
-    event.preventDefault();
-    console.log("2");
-  }
-
-  handleDelete(event) {
-    event.preventDefault();
-    console.log("3");
   }
 
   render() {
@@ -81,18 +67,12 @@ class Commandes extends React.Component {
               <TableBody>
                 {this.state.commandes.map((row) => (
                   <TableRow key={row.id}>
-                    <TableCell>
+                    <TableCell align="center">
                       <Link to={`/commandes/${row.id}`}>
                         <IconButton edge="start" className="tab-icons" color="inherit" aria-label="menu">
                           <AssignmentIcon />
                         </IconButton>
                       </Link>
-                      <IconButton edge="start" className="tab-icons" color="inherit" aria-label="menu" onClick={this.handleEdit}>
-                        <EditIcon />
-                      </IconButton>
-                      <IconButton edge="start" className="tab-icons" color="inherit" aria-label="menu" onClick={this.handleDelete}>
-                        <DeleteIcon />
-                      </IconButton>
                     </TableCell>
                     <TableCell align="center">{row.id}</TableCell>
                     <TableCell align="center">{row.entreprise || "-"}</TableCell>

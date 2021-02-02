@@ -80,7 +80,11 @@ router.post('/create', async (req, res) => {
                 [entreprise, nom, no_compte, telephone, courriel, po_client, vendeur, commentaire, attention]
             );
             // Succès
-            res.json(nouvCommande.rows);
+            const nouvEtat = await pool.query(
+                "INSERT INTO etats (texte, commande_id) VALUES ('nouvelle', $1)",
+                [nouvCommande.rows[0].id]
+            );
+            res.json(nouvCommande.rows, nouvEtat.rows);
             sendMail(attention, "Nouvelle commande", "Une nouvelle commande vous est assignée dans l\'application Sidekick.");
             console.log("Success POST.");
         }
@@ -163,9 +167,10 @@ router.put('/:id', async (req, res) => {
                 "INSERT INTO etats (texte, commande_id) VALUES ('modifiée', $1)",
                 [modCommande.rows[0].id]
             );
-            res.json(modCommande.rows);
+            res.json(modCommande.rows, modEtat.rows);
             sendMail(attention, "Modification d'une commande", "Une commande qui vous est assignée dans l\'application Sidekick a été modifiée.");
             console.log("Success PUT.");
+
         }
     } catch (error) {
         console.log(error.message);

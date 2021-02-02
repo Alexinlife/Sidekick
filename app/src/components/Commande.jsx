@@ -11,6 +11,13 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import IconButton from '@material-ui/core/IconButton';
+// Dialog
+import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
 // Material-UI Icons
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
@@ -21,6 +28,10 @@ export default class Commande extends React.Component {
     constructor(props) {
         super();
         this.id = props.match.params.id;
+        this.handleEdit = this.handleEdit.bind(this);
+        this.handleDelete = this.handleDelete.bind(this);
+        this.handleClickOpen = this.handleClickOpen.bind(this);
+        this.handleClickClose = this.handleClickClose.bind(this);
     }
 
     componentDidMount() {
@@ -30,8 +41,40 @@ export default class Commande extends React.Component {
 
     state = {
         commande: [],
-        produits: []
+        produits: [],
+        open: false
     }
+
+    handleEdit(event) {
+        event.preventDefault();
+        console.log("1");
+    }
+
+    async handleDelete(event) {
+        event.preventDefault();
+        try {
+            const response = await axios.delete(`http://localhost:5000/api/commandes/${this.id}`);
+            console.log(response);
+            this.setState({
+                open: false
+            });
+            window.location("/")
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    handleClickOpen() {
+        this.setState({
+            open: true
+        });
+    };
+
+    handleClickClose() {
+        this.setState({
+            open: false
+        });
+    };
 
     async getCommande() {
         try {
@@ -66,6 +109,23 @@ export default class Commande extends React.Component {
                     <NavBar />
                 </header>
                 <div className="content">
+                    <div>
+                        <Dialog
+                            open={this.state.open}
+                            onClose={this.handleClickClose}
+                            aria-labelledby="alert-dialog-title"
+                            aria-describedby="alert-dialog-description">
+                            <DialogTitle id="alert-dialog-title">{"Supprimer la commande ?"}</DialogTitle>
+                            <DialogContent>
+                                <DialogContentText id="alert-dialog-description">
+                                    Souhaitez-vous vraiment supprimer la commande défintivement ? Ceci inclut tous les produits et les états associés.</DialogContentText>
+                            </DialogContent>
+                            <DialogActions>
+                                <Button onClick={this.handleClickClose} color="primary">Annuler</Button>
+                                <Button onClick={this.handleDelete} color="primary" autoFocus>Oui</Button>
+                            </DialogActions>
+                        </Dialog>
+                    </div>
                     <h1>Détails de la commande no. {this.id}</h1>
                     <TableContainer component={Paper}>
                         <Table className="table" aria-label="simple table">
@@ -83,11 +143,11 @@ export default class Commande extends React.Component {
                             <TableBody>
                                 {this.state.commande.map((row) => (
                                     <TableRow key={row.id}>
-                                        <TableCell>
-                                            <IconButton edge="start" className="tab-icons" color="inherit" aria-label="menu" onClick={this.handleOrderEdit}>
+                                        <TableCell align="center">
+                                            <IconButton edge="start" className="tab-icons" color="inherit" aria-label="menu" onClick={this.handleEdit}>
                                                 <EditIcon />
                                             </IconButton>
-                                            <IconButton edge="start" className="tab-icons" color="inherit" aria-label="menu" onClick={this.handleOrderDelete}>
+                                            <IconButton edge="start" className="tab-icons" color="inherit" aria-label="menu" onClick={this.handleClickOpen}>
                                                 <DeleteIcon />
                                             </IconButton>
                                         </TableCell>

@@ -18,7 +18,7 @@ img {
     max-height: 50px;
 }
 
-/* Pour les Link de react-router-dom */
+/* Link de react-router-dom */
 a {
     color: white;
 }

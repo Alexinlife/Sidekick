@@ -1,6 +1,35 @@
 const express = require('express');
 const pool = require('../db');
 var router = express.Router();
+const Joi = require('joi');
+
+// Validation Joi
+// TODO: Adapter pour état, exemple seulement
+const schema = Joi.object({
+    code: Joi.string()
+        .allow("")
+        .max(32),
+
+    description: Joi.string()
+        .allow("")
+        .max(255),
+
+    qte_demandee: Joi.number()
+        .integer()
+        .min(1)
+        .required(),
+
+    prix: Joi.number()
+        .precision(4)
+        .min(0.0050)
+        .positive(),
+
+    identifiant: Joi.number()
+        .integer()
+        .positive()
+        .required()
+})
+    .or('code', 'description');
 
 // Créer un état
 router.post('/create/:commande_id', async (req, res) => {
