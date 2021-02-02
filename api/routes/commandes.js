@@ -1,6 +1,41 @@
 const express = require('express');
+const nodemailer = require('nodemailer');
 const pool = require('../db');
 var router = express.Router();
+
+// Nodemailer config
+const transporter = nodemailer.createTransport({
+    port: 465,               // true for 465, false for other ports
+    host: "smtp.gmail.com",
+    auth: {
+        user: 'notifications.sidekick@gmail.com',
+        pass: 'QrtnnmZRVF#z!yj@^lHlxCjiZYRIIVWF7Mhr0k7S2GlLnIqi&h',
+    },
+    secure: true,
+});
+
+/**
+ * Compose un message avant de l'envoyer via Nodemailer
+ * @param {*} attention La personne devant recevoir le message
+ * @param {*} subject Le sujet du message
+ * @param {*} text Le texte contenu dans le message
+ */
+function sendMail(attention, subject, text) {
+    // Composition du message
+    const mailData = {
+        from: "notifications.sidekick@gmail.com",  // sender address
+        to: attention,   // list of receivers
+        subject: subject,
+        text: text,
+    };
+    // Envoi du message
+    transporter.sendMail(mailData, function (err, info) {
+        if (err)
+            console.log(err)
+        else
+            console.log(info);
+    });
+}
 
 // Créer une commande
 router.post('/create', async (req, res) => {
@@ -46,6 +81,7 @@ router.post('/create', async (req, res) => {
             );
             // Succès
             res.json(nouvCommande.rows);
+            sendMail(attention, "Nouvelle commande", "Une nouvelle commande vous est assignée dans l\'application Sidekick.");
             console.log("Success POST.");
         }
     } catch (error) {
@@ -124,6 +160,7 @@ router.put('/:id', async (req, res) => {
             );
             // Succès
             res.json(modCommande.rows);
+            sendMail(attention, "Modification d'une commande", "Une commande qui vous est assignée dans l\'application Sidekick a été modifiée.");
             console.log("Success PUT.");
         }
     } catch (error) {
@@ -135,11 +172,12 @@ router.put('/:id', async (req, res) => {
 router.delete('/:id', async (req, res) => {
     try {
         const { id } = req.params;
-        // Requête
+        //  Requêtes
         const supprCommande = await pool.query("DELETE FROM commandes WHERE id = $1 RETURNING *", [id]);
         // Succès
         res.json(supprCommande.rows);
         console.log("Success DELETE.");
+        sendMail(supprCommande.rows[0].attention, "Suppression d'une commande", "Une commande qui vous était assignée dans l\'application Sidekick a été supprimée.");
     } catch (error) {
         console.log(error.message);
     }
