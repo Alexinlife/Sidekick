@@ -159,6 +159,10 @@ router.put('/:id', async (req, res) => {
                 [entreprise, nom, no_compte, telephone, courriel, po_client, vendeur, commentaire, attention, id]
             );
             // Succès
+            const modEtat = await pool.query(
+                "INSERT INTO etats (texte, commande_id) VALUES ('modifiée', $1)",
+                [modCommande.rows[0].id]
+            );
             res.json(modCommande.rows);
             sendMail(attention, "Modification d'une commande", "Une commande qui vous est assignée dans l\'application Sidekick a été modifiée.");
             console.log("Success PUT.");

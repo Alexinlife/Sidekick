@@ -1,9 +1,38 @@
 const express = require('express');
 const pool = require('../db');
 var router = express.Router();
+const Joi = require('joi');
+
+// Validation Joi
+const schema = Joi.object({
+    code: Joi.string()
+        .max(32),
+
+    description: Joi.string()
+        .max(255),
+
+    qte_demandee: Joi.number()
+        .integer()
+        .positive()
+        .required(),
+
+    qte_recueillie: Joi.number()
+        .integer()
+        .positive(),
+
+    prix: Joi.number()
+        .precision(4)
+        .positive(),
+
+    commande_id: Joi.number()
+        .integer()
+        .positive()
+        .required()
+})
 
 // Créer un produit
 router.post('/create/:commande_id', async (req, res) => {
+
     try {
         const { commande_id } = req.params;
         const { code, description, qte_demandee, prix } = req.body;
