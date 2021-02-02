@@ -113,9 +113,9 @@ export default class Commande extends React.Component {
                         <Table className="table" aria-label="simple table">
                             <TableHead>
                                 <TableRow>
-                                    <TableCell align="center"></TableCell>
                                     <TableCell align="center">Quantité demandée</TableCell>
                                     <TableCell align="center">Quantité recueillie</TableCell>
+                                    <TableCell align="center"></TableCell>
                                     <TableCell align="center">Code</TableCell>
                                     <TableCell align="center">Description</TableCell>
                                     <TableCell align="center">Prix</TableCell>
@@ -124,19 +124,12 @@ export default class Commande extends React.Component {
                             <TableBody>
                                 {this.state.produits.map((row) => (
                                     <TableRow key={row.id}>
-                                        <TableCell>
-                                            <IconButton edge="start" className="tab-icons" color="inherit" aria-label="menu" onClick={this.handleProductEdit}>
-                                                <EditIcon />
-                                            </IconButton>
-                                            <IconButton edge="start" className="tab-icons" color="inherit" aria-label="menu" onClick={this.handleProductDelete}>
-                                                <DeleteIcon />
-                                            </IconButton>
-                                        </TableCell>
                                         <TableCell align="center">{row.qte_demandee}</TableCell>
                                         <TableCell align="center">{row.qte_recueillie || 0}</TableCell>
+                                        <TableCell align="center"></TableCell>
                                         <TableCell align="center">{row.code || "-"}</TableCell>
                                         <TableCell align="center">{row.description || "-"}</TableCell>
-                                        <TableCell align="center">{row.prix || "-"}</TableCell>
+                                        <TableCell align="center">{row.prix ? row.prix + "$" : "-"}</TableCell>
                                     </TableRow>
                                 ))}
                             </TableBody>
