@@ -4,6 +4,11 @@ import NavBar from './rfc/NavBar';
 // react-router-dom
 import { Link } from 'react-router-dom';
 
+/**
+ * @author Alex Lajeunesse
+ * @class NotFound
+ * @description Page 404 rendue lorsqu'un url demandé est inconnue pour l'application
+ */
 export default function NotFound() {
     return (
         <div>

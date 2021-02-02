@@ -13,7 +13,7 @@ import BellIcon from '@material-ui/icons/Notifications';
 // react-router-dom
 import { Link } from 'react-router-dom';
 
-
+// Styles de la NavBar
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -36,6 +36,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+/**
+ * @author Alex Lajeunesse
+ * @function NavBar
+ * @description Affiche la NavBar et la rend fonctionnelle via react-router-dom
+ */
 export default function NavBar() {
   const classes = useStyles();
   return (

@@ -41,7 +41,8 @@ a .tab-icons {
     font-size: 80px;
 }
 
-.nf-desc {
+/* Description 404 et note états */
+.etats-note, .nf-desc {
     font-size: 18px;
 }
 
@@ -54,7 +55,7 @@ a .tab-icons {
     }
 }
 
-/* Pour les écrans d'iPhone 6, 7 et X */
+/* Écrans d'iPhone 6, 7 et X */
 @media only screen and (max-width: 500px) {
     img {
         object-fit: scale-down;
@@ -62,7 +63,7 @@ a .tab-icons {
     }
 }
 
-/* Pour les écrans encore plus petits */
+/* Écrans encore plus petits */
 @media only screen and (max-width: 375px) {
     img {
         object-fit: scale-down;

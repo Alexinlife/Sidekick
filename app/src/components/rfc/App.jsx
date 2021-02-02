@@ -7,7 +7,11 @@ import CreationCommande from '../CreationCommande';
 import Notifications from '../Etats';
 import NotFound from '../NotFound';
 
-// S'occupe des routes vers les différentes pages
+/**
+ * @author Alex Lajeunesse
+ * @function App
+ * @description S'occupe des routes vers les différentes pages avec rect-router-dom
+ */
 function App() {
   return (
     <div className="App">

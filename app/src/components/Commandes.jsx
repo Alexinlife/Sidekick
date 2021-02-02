@@ -16,7 +16,14 @@ import AssignmentIcon from '@material-ui/icons/Assignment';
 // react-router-dom
 import { Link } from 'react-router-dom';
 
+/**
+ * @author Alex Lajeunesse
+ * @class Commandes
+ * @description Gère la page des commandes (affichage, requêtes à l'API et redirection)
+ */
 class Commandes extends React.Component {
+
+  // Constructeur
   constructor(props) {
     super();
   }
@@ -29,6 +36,11 @@ class Commandes extends React.Component {
     commandes: []
   }
 
+  /**
+   * @author Alex Lajeunesse
+   * @function getCommandes
+   * @description Effectue une requête à l'api pour retrouver toutes les commandes
+   */
   async getCommandes() {
     try {
       const response = await axios.get('http://localhost:5000/api/commandes/');

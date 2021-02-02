@@ -10,7 +10,14 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 
+/**
+ * @author Alex Lajeunesse
+ * @class Etats
+ * @description Page affichant la liste de tous les états
+ */
 export default class Etats extends React.Component {
+
+    // Constructeur
     constructor(props) {
         super();
     }
@@ -23,6 +30,11 @@ export default class Etats extends React.Component {
         commandes: []
     }
 
+    /**
+     * @author Alex Lajeunesse
+     * @function getEtats
+     * @description Effectue une requête à l'api pour retrouver tous les états
+     */
     async getEtats() {
         try {
             const response = await axios.get('http://localhost:5000/api/etats/');
@@ -44,6 +56,7 @@ export default class Etats extends React.Component {
                 </header>
                 <div className="content">
                     <h1>Liste des états</h1>
+                    <p className="etats-note"><b>Attention : </b>Cette page n'affiche pas si une commande a été supprimée. Assurez-vous aussi de vérifier vos courriels !</p>
                     <TableContainer className="etats" component={Paper}>
                         <Table className="table" aria-label="simple table">
                             <TableBody>

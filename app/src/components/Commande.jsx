@@ -22,9 +22,14 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 
-
+/**
+ * @author Alex Lajeunesse
+ * @class Commande
+ * @description Gère la page de commande individuelle (affichage, requêtes à l'API, redirection et suppression)
+ */
 export default class Commande extends React.Component {
 
+    // Constructeur
     constructor(props) {
         super();
         this.id = props.match.params.id;
@@ -45,11 +50,13 @@ export default class Commande extends React.Component {
         open: false
     }
 
+    // Lorsque l'utilisateur clique sur l'icône de modification
     handleEdit(event) {
         event.preventDefault();
         console.log("1");
     }
 
+    // Lorsque l'utilisateur clique sur "Oui" dans l'Alert de suppression
     async handleDelete(event) {
         event.preventDefault();
         try {
@@ -64,18 +71,25 @@ export default class Commande extends React.Component {
         }
     }
 
+    // Lorsque l'utilisateur clique sur l'icône de suppression
     handleClickOpen() {
         this.setState({
             open: true
         });
     };
 
+    // Lorsque l'utilisateur ferme l'Alert de suppression
     handleClickClose() {
         this.setState({
             open: false
         });
     };
 
+    /**
+   * @author Alex Lajeunesse
+   * @function getCommande
+   * @description Effectue une requête à l'api pour retrouver la commande appropriée
+   */
     async getCommande() {
         try {
             const response = await axios.get(`http://localhost:5000/api/commandes/${this.id}`);
@@ -89,6 +103,11 @@ export default class Commande extends React.Component {
         }
     }
 
+    /**
+       * @author Alex Lajeunesse
+       * @function getProduits
+       * @description Effectue une requête à l'api pour retrouver tous les produits de la commande
+       */
     async getProduits() {
         try {
             const response = await axios.get(`http://localhost:5000/api/produits/${this.id}`);
