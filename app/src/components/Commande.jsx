@@ -58,7 +58,7 @@ export default class Commande extends React.Component {
             this.setState({
                 open: false
             });
-            window.location("/")
+            window.location.replace("/")
         } catch (error) {
             console.error(error);
         }

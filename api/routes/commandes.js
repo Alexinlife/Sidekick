@@ -84,7 +84,7 @@ router.post('/create', async (req, res) => {
                 "INSERT INTO etats (texte, commande_id) VALUES ('nouvelle', $1)",
                 [nouvCommande.rows[0].id]
             );
-            res.json(nouvCommande.rows, nouvEtat.rows);
+            res.json([nouvCommande.rows, nouvEtat.rows]);
             sendMail(attention, "Nouvelle commande", "Une nouvelle commande vous est assignée dans l\'application Sidekick.");
             console.log("Success POST.");
         }
@@ -167,7 +167,7 @@ router.put('/:id', async (req, res) => {
                 "INSERT INTO etats (texte, commande_id) VALUES ('modifiée', $1)",
                 [modCommande.rows[0].id]
             );
-            res.json(modCommande.rows, modEtat.rows);
+            res.json([modCommande.rows, modEtat.rows]);
             sendMail(attention, "Modification d'une commande", "Une commande qui vous est assignée dans l\'application Sidekick a été modifiée.");
             console.log("Success PUT.");
 
