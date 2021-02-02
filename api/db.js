@@ -1,5 +1,7 @@
 const Pool = require('pg').Pool;
 
+// Instanciation de la bd
+// TODO: Créer un user postgres
 const pool = new Pool({
     user: "postgres",
     password: "forsidekick",
