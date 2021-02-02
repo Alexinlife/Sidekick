@@ -93,7 +93,7 @@ router.post('/create', async (req, res) => {
 router.get('/', async (req, res) => {
     try {
         // Requête
-        const commandes = await pool.query("SELECT * FROM commandes");
+        const commandes = await pool.query("SELECT * FROM commandes ORDER BY date_creation DESC");
         // Succès
         res.json(commandes.rows);
         console.log("Success GET.");
