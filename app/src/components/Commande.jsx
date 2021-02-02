@@ -14,8 +14,6 @@ import IconButton from '@material-ui/core/IconButton';
 // Material-UI Icons
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
-// react-router-dom
-import { Link } from 'react-router-dom';
 
 
 export default class Commande extends React.Component {
@@ -54,7 +52,7 @@ export default class Commande extends React.Component {
             console.log(response);
             // La réponse de l'API est enregistré dans le state
             this.setState({
-                commande: response.data
+                produits: response.data
             });
         } catch (error) {
             console.error(error);
@@ -105,10 +103,10 @@ export default class Commande extends React.Component {
                         </Table>
                     </TableContainer>
                     {this.state.commande.map((row) => (
-                        <Paper>
-                            <h3 className="comments-title">Commentaires</h3>
-                            <div className="comments-text">{row.description || "test is always great to be and whatever to do"}</div>
-                        </Paper>
+                        row.commentaire ? <Paper key={row.id}>
+                            <h3 className="comments-title">commentaire</h3>
+                            <div className="comments-text">{row.commentaire}</div>
+                        </Paper> : ""
                     ))}
                     <h1>Produits</h1>
                     <TableContainer component={Paper}>
@@ -124,7 +122,7 @@ export default class Commande extends React.Component {
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                                {this.state.commande.map((row) => (
+                                {this.state.produits.map((row) => (
                                     <TableRow key={row.id}>
                                         <TableCell>
                                             <IconButton edge="start" className="tab-icons" color="inherit" aria-label="menu" onClick={this.handleProductEdit}>
@@ -134,8 +132,8 @@ export default class Commande extends React.Component {
                                                 <DeleteIcon />
                                             </IconButton>
                                         </TableCell>
-                                        <TableCell align="center">{row.quantite_demandee || "-"}</TableCell>
-                                        <TableCell align="center">{row.quantite_recueillie || 0}</TableCell>
+                                        <TableCell align="center">{row.qte_demandee}</TableCell>
+                                        <TableCell align="center">{row.qte_recueillie || 0}</TableCell>
                                         <TableCell align="center">{row.code || "-"}</TableCell>
                                         <TableCell align="center">{row.description || "-"}</TableCell>
                                         <TableCell align="center">{row.prix || "-"}</TableCell>
