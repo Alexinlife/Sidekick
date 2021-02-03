@@ -4,7 +4,6 @@ var router = express.Router();
 const Joi = require('joi');
 
 // Validation Joi
-// TODO: Adapter pour état, exemple seulement
 const schema = Joi.object({
     texte: Joi.string()
         .max(64)
@@ -17,7 +16,9 @@ const schema = Joi.object({
 });
 
 /**
- * Valide les paramètres entrés avec Joi
+ * @author Alex Lajeunesse
+ * @function validateEtat
+ * @description Valide les paramètres entrés avec Joi
  * @param {*} texte Le texte de l'état à valider
  * @param {*} identifiant L'identifiant à valider
  */
@@ -41,12 +42,13 @@ router.post('/create/:commande_id', async (req, res) => {
         const { commande_id } = req.params;
         const { texte } = req.body;
         // Requête
-        if (await validateProduit(texte, commande_id)) {
+        if (await validateEtat(texte, commande_id)) {
             const nouvProduit = await pool.query("INSERT INTO etats (texte, commande_id) VALUES ($1, $2) RETURNING *",
                 [texte, commande_id]);
             // Succès
             res.json(nouvProduit.rows);
             console.log("Success POST.");
+            // Erreur
         } else {
             res.status(400).json({ "erreur": "Données invalides" });
         }
@@ -65,6 +67,7 @@ router.get('/last/:commande_id', async (req, res) => {
         // Succès
         res.json(etat.rows);
         console.log("Success GET by Order_ID.");
+        // Erreur
     } catch (error) {
         console.log(error.message);
     }
@@ -80,6 +83,7 @@ router.get('/:commande_id', async (req, res) => {
         // Succès
         res.json(etats.rows);
         console.log("Success GET by Order_ID.");
+        // Erreur
     } catch (error) {
         console.log(error.message);
     }
@@ -93,6 +97,7 @@ router.get('/', async (req, res) => {
         // Succès
         res.json(etats.rows);
         console.log("Success GET by Order_ID.");
+        // Erreur
     } catch (error) {
         console.log(error.message);
     }
@@ -107,6 +112,7 @@ router.delete('/:commande_id', async (req, res) => {
         // Succès
         res.json(supprEtats.rows);
         console.log("Success DELETE.");
+        // Erreur
     } catch (error) {
         console.log(error.message);
     }

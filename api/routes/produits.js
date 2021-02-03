@@ -31,7 +31,9 @@ const schema = Joi.object({
     .or('code', 'description');
 
 /**
- * Valide les paramètres entrés avec Joi
+ * @author Alex Lajeunesse
+ * @function validateProduit
+ * @description Valide les paramètres entrés avec Joi
  * @param {*} code Le code du produit à valider
  * @param {*} description La decription du produit à valider
  * @param {*} qte_demandee La quantité demandée du produit à valider
@@ -47,8 +49,10 @@ async function validateProduit(code, description, qte_demandee, prix, identifian
             prix: prix,
             identifiant: identifiant
         });
+        // Succès
         console.log(validation);
         return true;
+        // Erreur
     } catch (error) {
         console.log(error);
         return false;
@@ -68,6 +72,7 @@ router.post('/create/:commande_id', async (req, res) => {
             // Succès
             res.json(nouvProduit.rows);
             console.log("Success POST.");
+            // Erreur
         } else {
             res.status(400).json({ "erreur": "Données invalides" });
         }
@@ -86,6 +91,7 @@ router.get('/:commande_id', async (req, res) => {
         // Succès
         res.json(produits.rows);
         console.log("Success GET by Order_ID.");
+        // Erreur
     } catch (error) {
         console.log(error.message);
     }
@@ -103,6 +109,7 @@ router.put('/:id', async (req, res) => {
             // Succès
             res.json(modProduit.rows);
             console.log("Succes PUT.");
+            // Erreur
         } else {
             res.status(400).json({ "erreur": "Données invalides" });
         }
@@ -120,6 +127,7 @@ router.delete('/:id', async (req, res) => {
         // Succès
         res.json(supprProduit.rows);
         console.log("Success DELETE.");
+        // Erreur
     } catch (error) {
         console.log(error.message);
     }
@@ -134,6 +142,7 @@ router.delete('/:commande_id', async (req, res) => {
         // Succès
         res.json(supprProduits.rows);
         console.log("Success DELETE.");
+        // Erreur
     } catch (error) {
         console.log(error.message);
     }
