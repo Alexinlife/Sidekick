@@ -6,30 +6,34 @@ const Joi = require('joi');
 // Validation Joi
 // TODO: Adapter pour état, exemple seulement
 const schema = Joi.object({
-    code: Joi.string()
-        .allow("")
-        .max(32),
-
-    description: Joi.string()
-        .allow("")
-        .max(255),
-
-    qte_demandee: Joi.number()
-        .integer()
-        .min(1)
+    texte: Joi.string()
+        .max(64)
         .required(),
-
-    prix: Joi.number()
-        .precision(4)
-        .min(0.0050)
-        .positive(),
 
     identifiant: Joi.number()
         .integer()
         .positive()
         .required()
-})
-    .or('code', 'description');
+});
+
+/**
+ * Valide les paramètres entrés avec Joi
+ * @param {*} texte Le texte de l'état à valider
+ * @param {*} identifiant L'identifiant à valider
+ */
+async function validateEtat(texte, identifiant) {
+    try {
+        const validation = await schema.validateAsync({
+            texte: texte,
+            identifiant: identifiant
+        });
+        console.log(validation);
+        return true;
+    } catch (error) {
+        console.log(error);
+        return false;
+    }
+}
 
 // Créer un état
 router.post('/create/:commande_id', async (req, res) => {
@@ -37,11 +41,15 @@ router.post('/create/:commande_id', async (req, res) => {
         const { commande_id } = req.params;
         const { texte } = req.body;
         // Requête
-        const nouvProduit = await pool.query("INSERT INTO etats (texte, commande_id) VALUES ($1, $2) RETURNING *",
-            [texte, commande_id]);
-        // Succès
-        res.json(nouvProduit.rows);
-        console.log("Success POST.");
+        if (await validateProduit(texte, commande_id)) {
+            const nouvProduit = await pool.query("INSERT INTO etats (texte, commande_id) VALUES ($1, $2) RETURNING *",
+                [texte, commande_id]);
+            // Succès
+            res.json(nouvProduit.rows);
+            console.log("Success POST.");
+        } else {
+            res.status(400).json({ "erreur": "Données invalides" });
+        }
     } catch (error) {
         console.log(error.message);
     }
