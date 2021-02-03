@@ -36,6 +36,11 @@ a .tab-icons {
     padding-bottom: 1%;
 }
 
+.form-item {
+    margin: 10px !important;
+    width: 30%;
+}
+
 /* 404 Not Found */
 .nf {
     font-size: 80px;

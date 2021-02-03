@@ -52,13 +52,13 @@ export default function NavBar() {
               <ListIcon />
             </IconButton>
           </Link>
-          <Link to="/creation">
+          <Link to="/create">
             <IconButton edge="start" className={classes.addButton} color="inherit" aria-label="menu">
               <AddIcon />
             </IconButton>
           </Link>
           <img className={classes.logo} src={logo} alt="React" />
-          <Link to="/notifications">
+          <Link to="/etats">
             <IconButton edge="end" className={classes.bellButton} color="inherit" aria-label="notifications">
               <BellIcon />
             </IconButton>

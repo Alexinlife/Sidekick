@@ -18,8 +18,8 @@ function App() {
       <Switch>
         <Route path="/commandes/:id" component={Commande} />
         <Route path="/commandes" component={Commandes} />
-        <Route path="/creation" component={CreationCommande} />
-        <Route path="/notifications" component={Notifications} />
+        <Route path="/create" component={CreationCommande} />
+        <Route path="/etats" component={Notifications} />
         <Route path="/404" component={NotFound} />
         <Redirect path="/" exact to={"/commandes"} />
         <Redirect to={"/404"} />
