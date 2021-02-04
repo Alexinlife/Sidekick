@@ -51,6 +51,7 @@ const schema = Joi.object({
         .max(64),
 
     no_compte: Joi.string()
+        .allow("")
         .max(9)
         .pattern(/^\d+$/),
 
@@ -59,6 +60,7 @@ const schema = Joi.object({
         .max(32),
 
     courriel: Joi.string()
+        .allow("")
         .email()
         .max(255),
 
@@ -76,7 +78,6 @@ const schema = Joi.object({
 
     attention: Joi.string()
         .email()
-        .allow("")
         .max(255)
         .required()
 })

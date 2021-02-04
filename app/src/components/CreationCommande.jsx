@@ -1,5 +1,6 @@
 import React from 'react'
 import '../css/Style.css';
+import axios from 'axios';
 import NavBar from './rfc/NavBar';
 import CreationProduits from './rfc/CreationProduits';
 import { Formik, Form, useField, Field } from 'formik';
@@ -190,8 +191,22 @@ export default class CreationCommande extends React.Component {
                         validateOnChange
                         initialValues={{ entreprise: '', nom: '', no_compte: '', telephone: '', courriel: '', po_client: '', vendeur: '', commentaire: '', attention: '' }}
                         onSubmit={(data, { setSubmitting }) => {
+                            // Désactive les boutons
                             setSubmitting(true);
                             console.log(data);
+                            // Envoie des informations à l'API
+                            axios.post('http://localhost:5000/api/commandes/create', {
+                                entreprise: data.entreprise,
+                                nom: data.nom,
+                                no_compte: data.no_compte,
+                                telephone: data.telephone,
+                                courriel: data.courriel,
+                                po_client: data.po_client,
+                                vendeur: data.vendeur,
+                                commentaire: data.commentaire,
+                                attention: data.attention
+                            })
+                            // Réactive les boutons
                             setSubmitting(false);
                         }}
                         validationSchema={this.schema}
@@ -252,7 +267,6 @@ export default class CreationCommande extends React.Component {
                                     <div>
                                         <Button className="form-item" disabled={isSubmitting} type="submit"><b>Enregistrer</b></Button>
                                     </div>
-                                    <pre>{JSON.stringify(values, null, 2)}</pre>
                                 </Paper>
                             </Form>
                         )}
