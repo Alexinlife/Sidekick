@@ -41,6 +41,17 @@ a .tab-icons {
     width: 30%;
 }
 
+.form-button {
+    margin: 10px !important;
+    width: 5%;
+}
+
+/* Champs de produits */
+.product-form-item {
+    margin: 10px !important;
+    width: 20%;
+}
+
 /* 404 Not Found */
 .nf {
     font-size: 80px;
