@@ -25,7 +25,7 @@ export default class CreationCommande extends React.Component {
                 required: 'Le champ ${path} est obligatoire'
             },
             string: {
-                max: 'Le champ ${path} doit contenir un maximum de ${max] caractères',
+                max: 'Le champ ${path} doit contenir un maximum de ${max} caractères',
                 email: 'L\'adresse courriel doit être valide'
             },
             number: {
