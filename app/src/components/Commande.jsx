@@ -37,10 +37,16 @@ export default class Commande extends React.Component {
     constructor(props) {
         super();
         this.id = props.match.params.id;
+
+        // handle boutons icône
         this.handleEdit = this.handleEdit.bind(this);
         this.handleDelete = this.handleDelete.bind(this);
+
+        // handle popup
         this.handleClickOpen = this.handleClickOpen.bind(this);
         this.handleClickClose = this.handleClickClose.bind(this);
+
+        // handle boutons de marquage
         this.handleMarkAsRead = this.handleMarkAsRead.bind(this);
         this.handleMarkAsDone = this.handleMarkAsDone.bind(this);
     }

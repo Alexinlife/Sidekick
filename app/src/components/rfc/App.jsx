@@ -19,6 +19,7 @@ function App() {
         <Route path="/commandes/:id" component={Commande} />
         <Route path="/commandes" component={Commandes} />
         <Route path="/create" component={CreationCommande} />
+        <Route path="/edit/:id" component={CreationCommande} />
         <Route path="/etats" component={Notifications} />
         <Route path="/404" component={NotFound} />
         <Redirect path="/" exact to={"/commandes"} />

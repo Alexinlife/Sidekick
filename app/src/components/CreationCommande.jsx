@@ -33,6 +33,8 @@ export default class CreationCommande extends React.Component {
      */
     constructor(props) {
         super();
+        this.id = props.match.params.id;
+        console.log(this.id);
 
         this.handleClickOpen = this.handleClickOpen.bind(this);
         this.handleClickClose = this.handleClickClose.bind(this);
@@ -225,8 +227,54 @@ export default class CreationCommande extends React.Component {
         });
     }
 
+    // Exécuté lorsque le composant est appelé
+    componentDidMount() {
+        this.getCommande();
+        this.getProduits();
+    }
+
+    /**
+    * @author Alex Lajeunesse
+    * @function getCommande
+    * @description Effectue une requête à l'api pour retrouver la commande appropriée
+    */
+    async getCommande() {
+        try {
+            const response = await axios.get(`http://localhost:5000/api/commandes/${this.id}`);
+            console.log(response);
+            // La réponse de l'API est enregistré dans le state
+            this.setState({
+                commande: response.data
+            });
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    /**
+    * @author Alex Lajeunesse
+    * @function getProduits
+    * @description Effectue une requête à l'api pour retrouver tous les produits de la commande
+    */
+    async getProduits() {
+        try {
+            const response = await axios.get(`http://localhost:5000/api/produits/${this.id}`);
+            console.log(response);
+            // La réponse de l'API est enregistré dans le state
+            this.setState({
+                produits: response.data,
+                editing: true,
+            });
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
     state = {
         open: false,
+        editing: false,
+        commande: [],
+        produits: [],
     }
 
     // Lorsque l'utilisateur clique sur l'icône de suppression
@@ -285,26 +333,43 @@ export default class CreationCommande extends React.Component {
             );
         }
 
-        // Les valeurs initiales du premier produit
-        const initialValues = {
-            entreprise: '',
-            nom: '',
-            no_compte: undefined,
-            telephone: '',
-            courriel: '',
-            po_client: '',
-            vendeur: '',
-            commentaire: '',
-            attention: '',
-            produits: [
-                {
-                    code: '',
-                    descrption: '',
-                    qte_demandee: '',
-                    prix: undefined,
+        var initialValues = undefined;
+
+        if (this.state.editing) {
+            initialValues = {
+                commande: this.state.commande[0],
+                produits: this.state.produits
+            }
+            console.log("initialValues :");
+            console.log(initialValues);
+            console.log("Mode édition");
+        } else {
+            // Les valeurs initiales lors de la création d'une commande
+            initialValues = {
+                commande: {
+                    entreprise: '',
+                    nom: '',
+                    no_compte: undefined,
+                    telephone: '',
+                    courriel: '',
+                    po_client: '',
+                    vendeur: '',
+                    commentaire: '',
+                    attention: '',
                 },
-            ],
-        };
+                produits: [
+                    {
+                        code: '',
+                        descrption: '',
+                        qte_demandee: '',
+                        prix: undefined,
+                    },
+                ],
+            };
+            console.log("initialValues :");
+            console.log(initialValues);
+            console.log("Mode création");
+        }
 
         return (
             <div>
@@ -332,22 +397,22 @@ export default class CreationCommande extends React.Component {
                     <Formik
                         validateOnChange
                         initialValues={initialValues}
-                        onSubmit={ async (data, { setSubmitting, resetForm }) => {
+                        onSubmit={async (data, { setSubmitting, resetForm }) => {
                             // Désactive le bouton "Enregistrer"
                             setSubmitting(true);
                             console.log(data);
                             try {
                                 // Enregistrement de la commande
                                 const orderResponse = await axios.post('http://localhost:5000/api/commandes/create', {
-                                    entreprise: data.entreprise,
-                                    nom: data.nom,
-                                    no_compte: data.no_compte,
-                                    telephone: data.telephone,
-                                    courriel: data.courriel,
-                                    po_client: data.po_client,
-                                    vendeur: data.vendeur,
-                                    commentaire: data.commentaire,
-                                    attention: data.attention,
+                                    entreprise: data.commande.entreprise,
+                                    nom: data.commande.nom,
+                                    no_compte: data.commande.no_compte,
+                                    telephone: data.commande.telephone,
+                                    courriel: data.commande.courriel,
+                                    po_client: data.commande.po_client,
+                                    vendeur: data.commande.vendeur,
+                                    commentaire: data.commande.commentaire,
+                                    attention: data.commande.attention,
                                 });
                                 console.log(orderResponse);
                                 // Préparation de l'URL d'envoi avec l'id de la commande
@@ -382,39 +447,39 @@ export default class CreationCommande extends React.Component {
                                     <div>
                                         <OrderTextField
                                             placeholder="Nom d'entreprise"
-                                            name="entreprise"
+                                            name="commande.entreprise"
                                         />
                                         <OrderTextField
                                             placeholder="Numéro de compte"
-                                            name="no_compte"
+                                            name="commande.no_compte"
                                         />
                                         <OrderTextField
                                             placeholder="Nom du client"
-                                            name="nom"
+                                            name="commande.nom"
                                         />
                                     </div>
                                     <div>
                                         <OrderTextField
                                             placeholder="Téléphone"
-                                            name="telephone"
+                                            name="commande.telephone"
                                         />
                                         <OrderTextField
                                             placeholder="Courriel"
-                                            name="courriel"
+                                            name="commande.courriel"
                                         />
                                         <OrderTextField
                                             placeholder="PO du client"
-                                            name="po_client"
+                                            name="commande.po_client"
                                         />
                                     </div>
                                     <div>
                                         <OrderTextField
                                             placeholder="*Vendeur"
-                                            name="vendeur"
+                                            name="commande.vendeur"
                                         />
                                         <OrderTextField
                                             placeholder="Commentaire"
-                                            name="commentaire"
+                                            name="commande.commentaire"
                                         />
                                     </div>
                                     <div>
@@ -423,7 +488,7 @@ export default class CreationCommande extends React.Component {
                                             <Field
                                                 type="select"
                                                 as={Select}
-                                                name="attention"
+                                                name="commande.attention"
                                             >
                                                 <MenuItem value={'alexinlife.exe@gmail.com'}>Alex Lajeunesse</MenuItem>
                                             </Field>
