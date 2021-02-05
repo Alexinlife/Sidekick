@@ -173,6 +173,7 @@ export default function CreerProduits() {
                                 )}
                             </FieldArray>
                             <Button className="form-item" disabled={isSubmitting} type="submit"><b>Enregistrer</b></Button>
+                            <p className="produits-note"><b>Attention : </b>Veuillez enregistrer l'en-tête de la commande avant d'enregistrer les produits.</p>
                         </Form>
                     )}
                 </Formik>

@@ -2,8 +2,7 @@ import React from 'react'
 import '../css/Style.css';
 import axios from 'axios';
 import NavBar from './rfc/NavBar';
-import CreationProduits from './rfc/CreationProduits';
-import { Formik, Form, useField, Field } from 'formik';
+import { Formik, Form, FieldArray, useField, Field } from 'formik';
 import * as Yup from 'yup';
 // Composants Material-UI
 import Paper from '@material-ui/core/Paper';
@@ -13,6 +12,12 @@ import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
 import Button from '@material-ui/core/Button';
 import { MenuItem } from '@material-ui/core';
+// Dialog
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
 
 /**
  * @author Alex Lajeunesse
@@ -29,24 +34,33 @@ export default class CreationCommande extends React.Component {
     constructor(props) {
         super();
 
+        this.handleClickOpen = this.handleClickOpen.bind(this);
+        this.handleClickClose = this.handleClickClose.bind(this);
+
         // Localisation en français
         Yup.setLocale({
             mixed: {
                 // eslint-disable-next-line
                 default: 'Champ ${path} invalide',
                 // eslint-disable-next-line
-                required: 'Le champ ${path} est obligatoire'
+                required: 'Le champ ${path} est obligatoire',
             },
             string: {
                 // eslint-disable-next-line
                 max: 'Le champ ${path} doit contenir un maximum de ${max} caractères',
                 // eslint-disable-next-line
-                email: 'L\'adresse courriel doit être valide'
+                email: 'L\'adresse courriel doit être valide',
             },
             number: {
                 // eslint-disable-next-line
-                max: 'Le champ ${path} doit avoir un nombre inférieur à ${max}'
-            }
+                integer: 'Le champ ${path} doit contenir un nombre entier',
+                // eslint-disable-next-line
+                positive: 'Le champ ${path} doit contenir un nombre positif',
+                // eslint-disable-next-line
+                min: 'Le champ ${path} doit avoir un nombre supérieur à ${min}',
+                // eslint-disable-next-line
+                max: 'Le champ ${path} doit avoir un nombre inférieur à ${max}',
+            },
         });
 
         // Schéma de validation Yup
@@ -151,28 +165,102 @@ export default class CreationCommande extends React.Component {
             commentaire: Yup.string()
                 .max(512),
 
-            // Présentement inutile avec le select mis en place
             attention: Yup.string()
                 .email()
                 .max(255)
                 .required(),
+
+            produits: Yup.array().of(
+                Yup.object({
+                    code: Yup.string()
+                        .max(32)
+                        /**
+                         * @see https://krzysztofzuraw.com/blog/2020/yup-validation-two-fields
+                         */
+                        .test(
+                            'ouInclusifCodeDesc', // test name
+                            'Au moins l\'un des champs code et description doit être rempli', // validation message to the user
+                            // it has to be function definition to use 'this'
+                            function (code) {
+                                const { description } = this.parent;
+                                if (code || description) {
+                                    return true; // lorsqu'il y a au moins un champs de rempli
+                                }
+                                return false;
+                            }
+                        ),
+
+                    description: Yup.string()
+                        .max(255)
+                        /**
+                         * @see https://krzysztofzuraw.com/blog/2020/yup-validation-two-fields
+                         */
+                        .test(
+                            'ouInclusifCodeDesc', // test name
+                            'Au moins l\'un des champs code et description doit être rempli', // validation message to the user
+                            // it has to be function definition to use 'this'
+                            function (description) {
+                                const { code } = this.parent;
+                                if (code || description) {
+                                    return true; // lorsqu'il y a au moins un champs de rempli
+                                }
+                                return false;
+                            }
+                        ),
+
+                    qte_demandee: Yup.number()
+                        .integer()
+                        .min(1)
+                        .required()
+                        // eslint-disable-next-line
+                        .typeError('Le champs ${path} doit contenir un nombre'),
+
+                    prix: Yup.number()
+                        .min(0.0050)
+                        .positive()
+                        // eslint-disable-next-line
+                        .typeError('Le champs ${path} doit contenir un nombre'),
+                })
+            )
         });
     }
+
+    state = {
+        open: false,
+    }
+
+    // Lorsque l'utilisateur clique sur l'icône de suppression
+    handleClickOpen() {
+        this.setState({
+            open: true
+        });
+    };
+
+    // Lorsque l'utilisateur ferme l'Alert de suppression
+    handleClickClose() {
+        this.setState({
+            open: false
+        });
+        window.location.replace("/");
+    };
 
     /**
      * @author Alex Lajeunesse
      * @function render
      * @description Affiche l'interface.
-     * @see https://www.youtube.com/watch?v=FD50LPJ6bjE pour Formik et MyTextField
+     * @see https://www.youtube.com/watch?v=FD50LPJ6bjE pour Formik et TextField
      * @see https://formik.org/docs/examples/field-arrays pour les produits
      */
     render() {
-        const MyTextField = ({ placeholder, ...props }) => {
+        // Champs de l'en-tête de la commande
+        const OrderTextField = ({ placeholder, ...props }) => {
             const [field, meta] = useField(props);
+            // Erreur si un champ a été touché et que la validation a échoué
             const error = meta.error && meta.touched ? meta.error : '';
+            // Format de base pour OrderTextField
             return (
                 <TextField
-                    className="form-item"
+                    className="order-form-item"
                     placeholder={placeholder}
                     {...field}
                     helperText={error}
@@ -180,33 +268,106 @@ export default class CreationCommande extends React.Component {
                 />
             );
         }
+        // Champs des produits de la commande
+        const ProductTextField = ({ placeholder, ...props }) => {
+            const [field, meta] = useField(props);
+            // Erreur si un champ a été touché et que la validation a échoué
+            const error = meta.error && meta.touched ? meta.error : '';
+            // Format de base pour OrderTextField
+            return (
+                <TextField
+                    className="product-form-item"
+                    placeholder={placeholder}
+                    {...field}
+                    helperText={error}
+                    error={!!error}
+                />
+            );
+        }
+
+        // Les valeurs initiales du premier produit
+        const initialValues = {
+            entreprise: '',
+            nom: '',
+            no_compte: undefined,
+            telephone: '',
+            courriel: '',
+            po_client: '',
+            vendeur: '',
+            commentaire: '',
+            attention: '',
+            produits: [
+                {
+                    code: '',
+                    descrption: '',
+                    qte_demandee: '',
+                    prix: undefined,
+                },
+            ],
+        };
+
         return (
             <div>
                 <header>
                     <NavBar />
                 </header>
                 <div className="content">
+                    <div>
+                        <Dialog
+                            open={this.state.open}
+                            onClose={this.handleClickClose}
+                            aria-labelledby="alert-dialog-title"
+                            aria-describedby="alert-dialog-description">
+                            <DialogTitle id="alert-dialog-title">{"Commande créée avec succès !"}</DialogTitle>
+                            <DialogContent>
+                                <DialogContentText id="alert-dialog-description">
+                                    La commande a été créée avec succès ! Un courriel a été envoyé à la personne mentionnée.</DialogContentText>
+                            </DialogContent>
+                            <DialogActions>
+                                <Button onClick={this.handleClickClose} color="primary">Ok</Button>
+                            </DialogActions>
+                        </Dialog>
+                    </div>
                     <h1>Créer une commande</h1>
                     <Formik
                         validateOnChange
-                        initialValues={{ entreprise: '', nom: '', no_compte: '', telephone: '', courriel: '', po_client: '', vendeur: '', commentaire: '', attention: '' }}
-                        onSubmit={(data, { setSubmitting }) => {
-                            // Désactive les boutons
+                        initialValues={initialValues}
+                        onSubmit={async (data, { setSubmitting, resetForm }) => {
+                            // Désactive le bouton "Enregistrer"
                             setSubmitting(true);
                             console.log(data);
-                            // Envoie des informations à l'API
-                            axios.post('http://localhost:5000/api/commandes/create', {
-                                entreprise: data.entreprise,
-                                nom: data.nom,
-                                no_compte: data.no_compte,
-                                telephone: data.telephone,
-                                courriel: data.courriel,
-                                po_client: data.po_client,
-                                vendeur: data.vendeur,
-                                commentaire: data.commentaire,
-                                attention: data.attention
-                            })
-                            // Réactive les boutons
+                            try {
+                                const orderResponse = await axios.post('http://localhost:5000/api/commandes/create', {
+                                    entreprise: data.entreprise,
+                                    nom: data.nom,
+                                    no_compte: data.no_compte,
+                                    telephone: data.telephone,
+                                    courriel: data.courriel,
+                                    po_client: data.po_client,
+                                    vendeur: data.vendeur,
+                                    commentaire: data.commentaire,
+                                    attention: data.attention,
+                                });
+                                console.log(orderResponse);
+                                const productURL = 'http://localhost:5000/api/produits/create/' + orderResponse.data[0][0].id
+                                var productResponse = [];
+                                for (let p = 0; p < data.produits.length; p++) {
+                                    productResponse[p] = await axios.post(productURL.toString(), {
+                                        code: data.produits[p].code,
+                                        descrption: data.produits[p].descrption,
+                                        qte_demandee: data.produits[p].qte_demandee,
+                                        prix: data.produits[p].prix,
+                                    });
+                                }
+                                console.log(productResponse);
+                                // Ouvre le popup d'information
+                                this.handleClickOpen();
+                                // Erreur
+                            } catch (error) {
+                                console.log(error);
+                            }
+
+                            // Réactive le bouton "Enregistrer"
                             setSubmitting(false);
                         }}
                         validationSchema={this.schema}
@@ -215,39 +376,45 @@ export default class CreationCommande extends React.Component {
                             <Form>
                                 <Paper>
                                     <div>
-                                        <MyTextField
+                                        <OrderTextField
                                             placeholder="Nom d'entreprise"
                                             name="entreprise"
                                         />
-                                        <MyTextField
+                                        <OrderTextField
                                             placeholder="Numéro de compte"
                                             name="no_compte"
                                         />
-                                        <MyTextField
+                                        <OrderTextField
                                             placeholder="Nom du client"
                                             name="nom"
                                         />
                                     </div>
                                     <div>
-                                        <MyTextField
+                                        <OrderTextField
                                             placeholder="Téléphone"
                                             name="telephone"
                                         />
-                                        <MyTextField
+                                        <OrderTextField
                                             placeholder="Courriel"
                                             name="courriel"
                                         />
-                                        <MyTextField
+                                        <OrderTextField
                                             placeholder="PO du client"
                                             name="po_client"
                                         />
                                     </div>
                                     <div>
-                                        <MyTextField
+                                        <OrderTextField
                                             placeholder="*Vendeur"
                                             name="vendeur"
                                         />
-                                        <FormControl className="form-item">
+                                        <OrderTextField
+                                            placeholder="Commentaire"
+                                            name="commentaire"
+                                        />
+                                    </div>
+                                    <div>
+                                        <FormControl className="order-form-item">
                                             <InputLabel htmlFor="attention">*Attention</InputLabel>
                                             <Field
                                                 type="select"
@@ -258,20 +425,55 @@ export default class CreationCommande extends React.Component {
                                             </Field>
                                         </FormControl>
                                     </div>
+                                </Paper>
+                                <h1>Produits</h1>
+                                <Paper>
+                                    <FieldArray name="produits">
+                                        {({ insert, remove, push }) => (
+                                            <div>
+                                                {values.produits.length > 0 &&
+                                                    values.produits.map((produit, index) => (
+                                                        <div className="row" key={index}>
+                                                            <div className="col">
+                                                                <ProductTextField
+                                                                    name={`produits.${index}.qte_demandee`}
+                                                                    placeholder="Quantité demandée"
+                                                                    type="text"
+                                                                />
+                                                                <ProductTextField
+                                                                    name={`produits.${index}.code`}
+                                                                    placeholder="Code"
+                                                                    type="text"
+                                                                />
+                                                                <ProductTextField
+                                                                    name={`produits.${index}.description`}
+                                                                    placeholder="Description"
+                                                                    type="text"
+                                                                />
+                                                                <ProductTextField
+                                                                    name={`produits.${index}.prix`}
+                                                                    placeholder="Prix"
+                                                                    type="text"
+                                                                />
+                                                                <Button className="form-delete-button" disabled={isSubmitting} onClick={() => remove(index)}><b>X</b></Button>
+                                                            </div>
+                                                        </div>
+                                                    ))}
+                                                <Button className="form-button" disabled={isSubmitting}
+                                                    onClick={() => push({ code: '', descrption: '', qte_demandee: '', prix: undefined })}
+                                                ><b>Ajouter un produit</b></Button>
+                                            </div>
+                                        )}
+                                    </FieldArray>
+                                </Paper>
+                                <Paper className="paper-save">
                                     <div>
-                                        <MyTextField
-                                            placeholder="Commentaire"
-                                            name="commentaire"
-                                        />
-                                    </div>
-                                    <div>
-                                        <Button className="form-item" disabled={isSubmitting} type="submit"><b>Enregistrer</b></Button>
+                                        <Button className="form-button" disabled={isSubmitting} type="submit"><b>Enregistrer</b></Button>
                                     </div>
                                 </Paper>
                             </Form>
                         )}
                     </Formik>
-                    <CreationProduits />
                 </div>
             </div>
         )

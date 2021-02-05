@@ -1,4 +1,5 @@
 /* Par défaut */
+
 html, body {
     background-color: #333333;
     color: white;
@@ -6,6 +7,7 @@ html, body {
 }
 
 /* Contenu en-dessous de la navbar */
+
 .content {
     min-height: 80vh;
     margin-left: 2%;
@@ -13,12 +15,14 @@ html, body {
 }
 
 /* Logo (la seule image) */
+
 img {
     object-fit: scale-down;
     max-height: 50px;
 }
 
 /* Link de react-router-dom */
+
 a {
     color: white;
 }
@@ -27,62 +31,115 @@ a .tab-icons {
     color: black;
 }
 
-/* Section commentaires de l'affichage individuel */
+/* Titre de la section commentaires de l'affichage individuel */
+
 .comments-title {
     padding-top: 1%;
 }
+
+/* Texte de la section commentaires de l'affichage individuel */
 
 .comments-text {
     padding-bottom: 1%;
 }
 
-.form-item {
+/* Champs de l'en-tête */
+
+.order-form-item {
     margin: 10px !important;
     width: 30%;
 }
 
-.form-button {
-    margin: 10px !important;
-    width: 5%;
-}
-
 /* Champs de produits */
+
 .product-form-item {
     margin: 10px !important;
     width: 20%;
 }
 
+/* Boutons du formulaire */
+
+.form-button {
+    margin: 10px !important;
+    width: 40%;
+}
+
+/* Bouton supprimer du formulaire */
+
+.form-delete-button {
+    margin: 10px !important;
+    width: 5%;
+}
+
 /* 404 Not Found */
+
 .nf {
     font-size: 80px;
 }
 
 /* Description 404 et note états */
+
 .etats-note, .nf-desc {
     font-size: 18px;
 }
 
+.produits-note {
+    padding-bottom: 1%;
+    font-size: 18px;
+}
+
+/* Paper du bouton Enregistrer */
+
+.paper-save {
+    margin-top: 1%;
+}
+
 /* Gestion de l'impression */
-@media print
-{    
-    .no-print, .no-print *
-    {
+
+@media print {
+    .no-print, .no-print * {
         display: none !important;
     }
 }
 
 /* Écrans d'iPhone 6, 7 et X */
+
 @media only screen and (max-width: 500px) {
     img {
         object-fit: scale-down;
         max-height: 40px;
     }
+
+    /* Boutons du formulaire */
+    .form-button {
+        margin: 10px !important;
+        width: 60%;
+    }
 }
 
 /* Écrans encore plus petits */
+
 @media only screen and (max-width: 375px) {
     img {
         object-fit: scale-down;
         max-height: 20px;
+    }
+
+    /* Boutons du formulaire */
+    .form-button {
+        margin: 10px !important;
+        width: 100%;
+    }
+
+    /* Champs de l'en-tête */
+    .order-form-item {
+        margin: 10px !important;
+        width: 40%;
+    }
+
+    /* Champs de produits */
+    .product-form-item {
+        margin: 10px !important;
+        width: 40%;
     }
 }
