@@ -29,7 +29,11 @@ import DeleteIcon from '@material-ui/icons/Delete';
  */
 export default class Commande extends React.Component {
 
-    // Constructeur
+    /**
+     * @author Alex Lajeunesse
+     * @constructor de Commande
+     * @param {*} props Les propriétés React
+     */
     constructor(props) {
         super();
         this.id = props.match.params.id;
@@ -37,28 +41,34 @@ export default class Commande extends React.Component {
         this.handleDelete = this.handleDelete.bind(this);
         this.handleClickOpen = this.handleClickOpen.bind(this);
         this.handleClickClose = this.handleClickClose.bind(this);
+        this.handleMarkAsRead = this.handleMarkAsRead.bind(this);
+        this.handleMarkAsDone = this.handleMarkAsDone.bind(this);
     }
 
+    // Exécuté lorsque le composant est appelé
     componentDidMount() {
         this.getCommande();
         this.getProduits();
         this.getEtats();
     }
 
+    // Lorsque ses valeurs sont changées avec setState, un nouveau rendu est appelé
     state = {
         commande: [],
         produits: [],
         etats: [],
         open: false,
+        read: false,
+        done: false,
     }
 
-    // Lorsque l'utilisateur clique sur l'icône de modification
+    // Gestion de l'icône de modification
     handleEdit(event) {
         event.preventDefault();
         console.log("1");
     }
 
-    // Lorsque l'utilisateur clique sur "Oui" dans l'Alert de suppression
+    // Gestion du bouton "Oui" d'Alert de suppression
     async handleDelete(event) {
         event.preventDefault();
         try {
@@ -73,19 +83,51 @@ export default class Commande extends React.Component {
         }
     }
 
-    // Lorsque l'utilisateur clique sur l'icône de suppression
+    // Gestion de l'icône de suppression
     handleClickOpen() {
         this.setState({
             open: true
         });
     };
 
-    // Lorsque l'utilisateur ferme l'Alert de suppression
+    // Gestion du bouton de fermeture d'Alert de suppression
     handleClickClose() {
         this.setState({
             open: false
         });
     };
+
+    // Gestion du bouton "Marquer comme lu"
+    async handleMarkAsRead() {
+        // Ajouter un état "Lue" lié à la commande
+        try {
+            const response = await axios.post(`http://localhost:5000/api/etats/create/${this.id}`, {
+                texte: "lue",
+            });
+            // Succès
+            console.log(response);
+            window.location.replace("/");
+            // Erreur
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    // Gestion du bouton "Marquer comme complétée"
+    async handleMarkAsDone() {
+        // Ajouter un état "Lue" lié à la commande
+        try {
+            const response = await axios.post(`http://localhost:5000/api/etats/create/${this.id}`, {
+                texte: "complétée",
+            });
+            // Succès
+            console.log(response);
+            window.location.replace("/");
+            // Erreur
+        } catch (error) {
+            console.error(error);
+        }
+    }
 
     /**
     * @author Alex Lajeunesse
@@ -133,6 +175,18 @@ export default class Commande extends React.Component {
             const response = await axios.get(`http://localhost:5000/api/etats/${this.id}`);
             console.log(response);
             // La réponse de l'API est enregistré dans le state
+            response.data.forEach(etat => {
+                if (etat.texte === "lue") {
+                    this.setState({
+                        read: true,
+                    });
+                }
+                if (etat.texte === "complétée") {
+                    this.setState({
+                        done: true,
+                    });
+                }
+            });
             this.setState({
                 etats: response.data
             });
@@ -221,6 +275,7 @@ export default class Commande extends React.Component {
                                 </TableRow>
                             </TableHead>
                             <TableBody>
+                                {/* Lignes de produits dans le tableau */}
                                 {this.state.produits.map((row) => (
                                     <TableRow key={row.id}>
                                         <TableCell align="center">{row.qte_demandee}</TableCell>
@@ -248,12 +303,12 @@ export default class Commande extends React.Component {
                     </TableContainer>
                     <Paper className="paper-button">
                         <div>
-                            <Button className="form-button"><b>Marquer comme lue</b></Button>
-                            <Button className="form-button"><b>Terminer la commande</b></Button>
+                            <Button className="form-button" disabled={this.state.read || this.state.done} onClick={this.handleMarkAsRead}><b>Marquer comme lue</b></Button>
+                            <Button className="form-button" disabled={this.state.done} onClick={this.handleMarkAsDone}><b>Terminer la commande</b></Button>
                         </div>
                     </Paper>
                 </div>
-            </div>
+            </div >
         )
     }
 }

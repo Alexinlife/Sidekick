@@ -33,7 +33,7 @@ class Commandes extends React.Component {
   }
 
   state = {
-    commandes: []
+    commandes: [],
   }
 
   /**
@@ -43,12 +43,30 @@ class Commandes extends React.Component {
    */
   async getCommandes() {
     try {
-      const response = await axios.get('http://localhost:5000/api/commandes/');
-      console.log(response);
+      const orderResponse = await axios.get('http://localhost:5000/api/commandes/');
+      console.log(orderResponse);
       // La réponse de l'API est enregistré dans le state
       this.setState({
-        commandes: response.data
+        commandes: orderResponse.data,
       });
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  // TODO: Réussir à afficher ses résultats dans le tableau
+  /**
+   * @author Alex Lajeunesse
+   * @function getLastEtats
+   * @description Effectue une requête à l'api pour retrouver les derniers états
+   */
+  async getLastEtat(commande_id) {
+    try {
+      const stateResponse = await axios.get(`http://localhost:5000/api/etats/last/${commande_id}`);
+      // Succès
+      console.log(stateResponse);
+      return stateResponse.data[0].texte;
+      // Erreur
     } catch (error) {
       console.error(error);
     }
@@ -74,6 +92,7 @@ class Commandes extends React.Component {
                   <TableCell align="center">Vendeur</TableCell>
                   <TableCell align="center">Date de modification</TableCell>
                   <TableCell align="center">Date de création</TableCell>
+                  <TableCell align="center">Dernier état</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -92,6 +111,7 @@ class Commandes extends React.Component {
                     <TableCell align="center">{row.po || "-"}</TableCell>
                     <TableCell align="center">{row.vendeur}</TableCell>
                     <TableCell align="center">{row.date_modification || "-"}</TableCell>
+                    <TableCell align="center">{row.date_creation}</TableCell>
                     <TableCell align="center">{row.date_creation}</TableCell>
                   </TableRow>
                 ))}

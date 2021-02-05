@@ -332,11 +332,12 @@ export default class CreationCommande extends React.Component {
                     <Formik
                         validateOnChange
                         initialValues={initialValues}
-                        onSubmit={async (data, { setSubmitting, resetForm }) => {
+                        onSubmit={ async (data, { setSubmitting, resetForm }) => {
                             // Désactive le bouton "Enregistrer"
                             setSubmitting(true);
                             console.log(data);
                             try {
+                                // Enregistrement de la commande
                                 const orderResponse = await axios.post('http://localhost:5000/api/commandes/create', {
                                     entreprise: data.entreprise,
                                     nom: data.nom,
@@ -349,8 +350,10 @@ export default class CreationCommande extends React.Component {
                                     attention: data.attention,
                                 });
                                 console.log(orderResponse);
+                                // Préparation de l'URL d'envoi avec l'id de la commande
                                 const productURL = 'http://localhost:5000/api/produits/create/' + orderResponse.data[0][0].id
                                 var productResponse = [];
+                                // Ajout de chaque produit à la commande via une requête POST
                                 for (let p = 0; p < data.produits.length; p++) {
                                     productResponse[p] = await axios.post(productURL.toString(), {
                                         code: data.produits[p].code,
@@ -359,6 +362,7 @@ export default class CreationCommande extends React.Component {
                                         prix: data.produits[p].prix,
                                     });
                                 }
+                                // Succès
                                 console.log(productResponse);
                                 // Ouvre le popup d'information
                                 this.handleClickOpen();
@@ -366,10 +370,10 @@ export default class CreationCommande extends React.Component {
                             } catch (error) {
                                 console.log(error);
                             }
-
                             // Réactive le bouton "Enregistrer"
                             setSubmitting(false);
                         }}
+                        // Schéma de validation utilisé
                         validationSchema={this.schema}
                     >
                         {({ values, isSubmitting, handleChange, handleBlur, handleSubmit }) => (
@@ -437,7 +441,7 @@ export default class CreationCommande extends React.Component {
                                                             <div className="col">
                                                                 <ProductTextField
                                                                     name={`produits.${index}.qte_demandee`}
-                                                                    placeholder="Quantité demandée"
+                                                                    placeholder="*Quantité demandée"
                                                                     type="text"
                                                                 />
                                                                 <ProductTextField

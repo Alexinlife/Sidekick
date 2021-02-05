@@ -17,15 +17,25 @@ import Paper from '@material-ui/core/Paper';
  */
 export default class Etats extends React.Component {
 
-    // Constructeur
+    /**
+     * @author Alex Lajeunesse
+     * @constructor d'Etats
+     * @param {*} props Les propriétés React
+     */
     constructor(props) {
         super();
     }
 
+    /**
+     * @author Alex Lajeunesse
+     * @function componentDidMount
+     * @description Exécuté lorsque le composant est appelé
+     */
     componentDidMount() {
         this.getEtats();
     }
-
+    
+    // Lorsque ses valeurs sont changées avec setState, un nouveau rendu est appelé
     state = {
         etats: []
     }
@@ -48,6 +58,11 @@ export default class Etats extends React.Component {
         }
     }
 
+    /**
+     * @author Alex Lajeunesse
+     * @function render
+     * @description Retourne le rendu de l'interface de la liste des états
+     */
     render() {
         return (
             <div>

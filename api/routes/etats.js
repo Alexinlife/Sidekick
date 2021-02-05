@@ -78,7 +78,7 @@ router.get('/:commande_id', async (req, res) => {
     try {
         const { commande_id } = req.params;
         // Requête
-        const etats = await pool.query("SELECT texte, date FROM etats WHERE commande_id = $1",
+        const etats = await pool.query("SELECT texte, date FROM etats WHERE commande_id = $1 ORDER BY date DESC",
             [commande_id]);
         // Succès
         res.json(etats.rows);
