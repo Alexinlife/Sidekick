@@ -27,7 +27,7 @@ export default class Etats extends React.Component {
     }
 
     state = {
-        commandes: []
+        etats: []
     }
 
     /**
@@ -41,7 +41,7 @@ export default class Etats extends React.Component {
             console.log(response);
             // La réponse de l'API est enregistré dans le state
             this.setState({
-                commandes: response.data
+                etats: response.data
             });
         } catch (error) {
             console.error(error);
@@ -55,12 +55,12 @@ export default class Etats extends React.Component {
                     <NavBar />
                 </header>
                 <div className="content">
-                    <h1>Liste des états</h1>
+                    <h1>États</h1>
                     <p className="etats-note"><b>Attention : </b>Cette page n'affiche pas si une commande a été supprimée. Assurez-vous aussi de vérifier vos courriels !</p>
                     <TableContainer className="etats" component={Paper}>
                         <Table className="table" aria-label="simple table">
                             <TableBody>
-                                {this.state.commandes.map((row) => (
+                                {this.state.etats.map((row) => (
                                     <TableRow key={row.id}>
                                         <TableCell align="center">Commande no. {row.commande_id} : {row.texte} ({row.date})</TableCell>
                                     </TableRow>

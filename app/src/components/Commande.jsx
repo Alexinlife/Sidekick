@@ -42,12 +42,14 @@ export default class Commande extends React.Component {
     componentDidMount() {
         this.getCommande();
         this.getProduits();
+        this.getEtats();
     }
 
     state = {
         commande: [],
         produits: [],
-        open: false
+        etats: [],
+        open: false,
     }
 
     // Lorsque l'utilisateur clique sur l'icône de modification
@@ -86,10 +88,10 @@ export default class Commande extends React.Component {
     };
 
     /**
-   * @author Alex Lajeunesse
-   * @function getCommande
-   * @description Effectue une requête à l'api pour retrouver la commande appropriée
-   */
+    * @author Alex Lajeunesse
+    * @function getCommande
+    * @description Effectue une requête à l'api pour retrouver la commande appropriée
+    */
     async getCommande() {
         try {
             const response = await axios.get(`http://localhost:5000/api/commandes/${this.id}`);
@@ -104,10 +106,10 @@ export default class Commande extends React.Component {
     }
 
     /**
-       * @author Alex Lajeunesse
-       * @function getProduits
-       * @description Effectue une requête à l'api pour retrouver tous les produits de la commande
-       */
+    * @author Alex Lajeunesse
+    * @function getProduits
+    * @description Effectue une requête à l'api pour retrouver tous les produits de la commande
+    */
     async getProduits() {
         try {
             const response = await axios.get(`http://localhost:5000/api/produits/${this.id}`);
@@ -115,6 +117,24 @@ export default class Commande extends React.Component {
             // La réponse de l'API est enregistré dans le state
             this.setState({
                 produits: response.data
+            });
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    /**
+    * @author Alex Lajeunesse
+    * @function getEtats
+    * @description Effectue une requête à l'api pour retrouver tous les états de la commande
+    */
+    async getEtats() {
+        try {
+            const response = await axios.get(`http://localhost:5000/api/etats/${this.id}`);
+            console.log(response);
+            // La réponse de l'API est enregistré dans le state
+            this.setState({
+                etats: response.data
             });
         } catch (error) {
             console.error(error);
@@ -214,6 +234,24 @@ export default class Commande extends React.Component {
                             </TableBody>
                         </Table>
                     </TableContainer>
+                    <h1>Liste des états</h1>
+                    <TableContainer component={Paper}>
+                        <Table className="table" aria-label="simple table">
+                            <TableBody>
+                                {this.state.etats.map((row) => (
+                                    <TableRow key={row.id}>
+                                        <TableCell align="center">{row.texte} le {row.date}</TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
+                    <Paper className="paper-button">
+                        <div>
+                            <Button className="form-button"><b>Marquer comme lue</b></Button>
+                            <Button className="form-button"><b>Terminer la commande</b></Button>
+                        </div>
+                    </Paper>
                 </div>
             </div>
         )

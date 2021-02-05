@@ -166,7 +166,7 @@ router.post('/create', async (req, res) => {
                 [nouvCommande.rows[0].id]
             );
             res.json([nouvCommande.rows, nouvEtat.rows]);
-            /*sendMail(attention, "Nouvelle commande", "Une nouvelle commande vous est assignée dans l\'application Sidekick.");*/
+            sendMail(attention, "Nouvelle commande", "Une nouvelle commande vous est assignée dans l\'application Sidekick.");
             console.log("Success POST.");
             // Ereur
         } else {
@@ -243,7 +243,7 @@ router.delete('/:id', async (req, res) => {
         // Succès
         res.json(supprCommande.rows);
         console.log("Success DELETE.");
-        /*sendMail(supprCommande.rows[0].attention, "Suppression d'une commande", "Une commande qui vous était assignée dans l\'application Sidekick a été supprimée.");*/
+        sendMail(supprCommande.rows[0].attention, "Suppression d'une commande", "Une commande qui vous était assignée dans l\'application Sidekick a été supprimée.");
         // Erreur
     } catch (error) {
         console.log(error.message);

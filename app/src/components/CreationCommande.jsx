@@ -466,7 +466,7 @@ export default class CreationCommande extends React.Component {
                                         )}
                                     </FieldArray>
                                 </Paper>
-                                <Paper className="paper-save">
+                                <Paper className="paper-button">
                                     <div>
                                         <Button className="form-button" disabled={isSubmitting} type="submit"><b>Enregistrer</b></Button>
                                     </div>
