@@ -23,15 +23,25 @@ import { Link } from 'react-router-dom';
  */
 class Commandes extends React.Component {
 
-  // Constructeur
+  /**
+   * @author Alex Lajeunesse
+   * @constructor de Commande
+   * @param {*} props Les propriétés React
+   */
   constructor(props) {
     super();
   }
 
+  /**
+   * @author Alex Lajeunesse
+   * @function componentDidMount
+   * @description Exécuté lorsque le composant est appelé
+   */
   componentDidMount() {
     this.getCommandes();
   }
 
+  // Lorsque ses valeurs sont changées avec setState, un nouveau rendu est appelé
   state = {
     commandes: [],
   }
@@ -72,16 +82,25 @@ class Commandes extends React.Component {
     }
   }
 
+  /**
+   * @author Alex Lajeunesse
+   * @function render
+   * @description Affiche l'interface de la page
+   */
   render() {
     return (
       <div>
+        {/* En-tête avec NavBar */}
         <header>
           <NavBar />
         </header>
+        {/* Corps de la page */}
         <div className="content">
           <h1>Liste des commandes</h1>
+          {/* Tableau des produits */}
           <TableContainer component={Paper}>
             <Table className="table" aria-label="simple table">
+              {/* En-tête du tableau */}
               <TableHead>
                 <TableRow>
                   <TableCell align="center"></TableCell>
@@ -95,6 +114,7 @@ class Commandes extends React.Component {
                   <TableCell align="center">Dernier état</TableCell>
                 </TableRow>
               </TableHead>
+              {/* Corps du tableau (lignes) */}
               <TableBody>
                 {this.state.commandes.map((row) => (
                   <TableRow key={row.id}>

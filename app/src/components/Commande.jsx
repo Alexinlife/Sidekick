@@ -51,7 +51,11 @@ export default class Commande extends React.Component {
         this.handleMarkAsDone = this.handleMarkAsDone.bind(this);
     }
 
-    // Exécuté lorsque le composant est appelé
+    /**
+     * @author Alex Lajeunesse
+     * @function componentDidMount
+     * @description Exécuté lorsque le composant est appelé
+     */
     componentDidMount() {
         this.getCommande();
         this.getProduits();
@@ -68,42 +72,66 @@ export default class Commande extends React.Component {
         done: false,
     }
 
-    // Gestion de l'icône de modification
+    /**
+     * @author Alex Lajeunesse
+     * @function handleEdit
+     * @description Gestion de l'icône de modification
+     * @param {*} event Évènement React
+     */
     handleEdit(event) {
         event.preventDefault();
         console.log("1");
     }
 
-    // Gestion du bouton "Oui" d'Alert de suppression
+    /**
+     * @author Alex Lajeunesse
+     * @function handleDelete
+     * @description Gestion de l'icône de modification
+     * @param {*} event Évènement React
+     */
     async handleDelete(event) {
         event.preventDefault();
         try {
             const response = await axios.delete(`http://localhost:5000/api/commandes/${this.id}`);
+            // Succès
             console.log(response);
+            // Fermeture du popup
             this.setState({
                 open: false
             });
+            // Redirection vers l'accueil
             window.location.replace("/");
+            // Erreur
         } catch (error) {
             console.error(error);
         }
     }
 
-    // Gestion de l'icône de suppression
+    /**
+     * @description Ouverture du popup
+     * @see https://material-ui.com/components/dialogs/#confirmation-dialogs
+     */
     handleClickOpen() {
         this.setState({
             open: true
         });
     };
 
-    // Gestion du bouton de fermeture d'Alert de suppression
+    /**
+     * @description Fermeture du popup
+     * @see https://material-ui.com/components/dialogs/#confirmation-dialogs
+     */
     handleClickClose() {
         this.setState({
             open: false
         });
     };
 
-    // Gestion du bouton "Marquer comme lu"
+    /**
+     * @author Alex Lajeunesse
+     * @function handleMarkAsRead
+     * @description Gestion du bouton "Marquer comme lu"
+     */
     async handleMarkAsRead() {
         // Ajouter un état "Lue" lié à la commande
         try {
@@ -119,7 +147,11 @@ export default class Commande extends React.Component {
         }
     }
 
-    // Gestion du bouton "Marquer comme complétée"
+    /**
+     * @author Alex Lajeunesse
+     * @function handleMarkAsDone
+     * @description Gestion du bouton "Marquer comme complétée"
+     */
     async handleMarkAsDone() {
         // Ajouter un état "Lue" lié à la commande
         try {
@@ -143,11 +175,13 @@ export default class Commande extends React.Component {
     async getCommande() {
         try {
             const response = await axios.get(`http://localhost:5000/api/commandes/${this.id}`);
+            // Succès
             console.log(response);
             // La réponse de l'API est enregistré dans le state
             this.setState({
                 commande: response.data
             });
+            // Erreur
         } catch (error) {
             console.error(error);
         }
@@ -161,11 +195,13 @@ export default class Commande extends React.Component {
     async getProduits() {
         try {
             const response = await axios.get(`http://localhost:5000/api/produits/${this.id}`);
+            // Succès
             console.log(response);
             // La réponse de l'API est enregistré dans le state
             this.setState({
                 produits: response.data
             });
+            // Erreur
         } catch (error) {
             console.error(error);
         }
@@ -179,23 +215,27 @@ export default class Commande extends React.Component {
     async getEtats() {
         try {
             const response = await axios.get(`http://localhost:5000/api/etats/${this.id}`);
+            // Succès
             console.log(response);
-            // La réponse de l'API est enregistré dans le state
             response.data.forEach(etat => {
+                // Désactiver "Marquer comme lue" si lue
                 if (etat.texte === "lue") {
                     this.setState({
                         read: true,
                     });
                 }
+                // Désactiver "Marquer comme terminée" si terminée
                 if (etat.texte === "complétée") {
                     this.setState({
                         done: true,
                     });
                 }
             });
+            // La réponse de l'API est enregistré dans le state
             this.setState({
                 etats: response.data
             });
+            // Erreur
         } catch (error) {
             console.error(error);
         }
@@ -204,17 +244,22 @@ export default class Commande extends React.Component {
     render() {
         return (
             <div>
+                {/* En-tête avec NavBar */}
                 <header>
                     <NavBar />
                 </header>
+                {/* Corps de la page */}
                 <div className="content">
+                    {/* Popup de confirmation */}
                     <div>
                         <Dialog
                             open={this.state.open}
                             onClose={this.handleClickClose}
                             aria-labelledby="alert-dialog-title"
                             aria-describedby="alert-dialog-description">
+                            {/* Titre */}
                             <DialogTitle id="alert-dialog-title">{"Supprimer la commande ?"}</DialogTitle>
+                            {/* Corps */}
                             <DialogContent>
                                 <DialogContentText id="alert-dialog-description">
                                     Souhaitez-vous vraiment supprimer la commande défintivement ? Ceci inclut tous les produits et les états associés.</DialogContentText>
@@ -226,8 +271,10 @@ export default class Commande extends React.Component {
                         </Dialog>
                     </div>
                     <h1>Détails de la commande no. {this.id}</h1>
+                    {/* Tableau de l'en-tête de commande */}
                     <TableContainer component={Paper}>
                         <Table className="table" aria-label="simple table">
+                            {/* En-tête du tableau */}
                             <TableHead>
                                 <TableRow>
                                     <TableCell align="center"></TableCell>
@@ -239,6 +286,7 @@ export default class Commande extends React.Component {
                                     <TableCell align="center">Date de création</TableCell>
                                 </TableRow>
                             </TableHead>
+                            {/* Corps du tableau (ligne) */}
                             <TableBody>
                                 {this.state.commande.map((row) => (
                                     <TableRow key={row.id}>
@@ -261,6 +309,7 @@ export default class Commande extends React.Component {
                             </TableBody>
                         </Table>
                     </TableContainer>
+                    {/* Section commentaire */}
                     {this.state.commande.map((row) => (
                         row.commentaire ? <Paper key={row.id}>
                             <h3 className="comments-title">commentaire</h3>
@@ -268,8 +317,10 @@ export default class Commande extends React.Component {
                         </Paper> : ""
                     ))}
                     <h1>Produits</h1>
+                    {/* Tableau des produits de la commande */}
                     <TableContainer component={Paper}>
                         <Table className="table" aria-label="simple table">
+                            {/* En-tête du tableau */}
                             <TableHead>
                                 <TableRow>
                                     <TableCell align="center">Quantité demandée</TableCell>
@@ -296,9 +347,11 @@ export default class Commande extends React.Component {
                         </Table>
                     </TableContainer>
                     <h1>Liste des états</h1>
+                    {/* Tableau des états de la commande */}
                     <TableContainer component={Paper}>
                         <Table className="table" aria-label="simple table">
                             <TableBody>
+                                {/* Lignes du tableau */}
                                 {this.state.etats.map((row) => (
                                     <TableRow key={row.id}>
                                         <TableCell align="center">{row.texte} le {row.date}</TableCell>
@@ -307,6 +360,7 @@ export default class Commande extends React.Component {
                             </TableBody>
                         </Table>
                     </TableContainer>
+                    {/* Section des boutons de marquage */}
                     <Paper className="paper-button">
                         <div>
                             <Button className="form-button" disabled={this.state.read || this.state.done} onClick={this.handleMarkAsRead}><b>Marquer comme lue</b></Button>

@@ -36,6 +36,7 @@ export default class CreationCommande extends React.Component {
         this.id = props.match.params.id;
         console.log(this.id);
 
+        // handle popup
         this.handleClickOpen = this.handleClickOpen.bind(this);
         this.handleClickClose = this.handleClickClose.bind(this);
 
@@ -65,13 +66,14 @@ export default class CreationCommande extends React.Component {
             },
         });
 
-        // Schéma de validation Yup
+        /**
+         * @description Schéma de validation Yup
+         * @see https://krzysztofzuraw.com/blog/2020/yup-validation-two-fields pour test()
+         */
         this.schema = Yup.object({
+            /* DÉBUT VALIDATION EN-TÊTE COMMANDE */
             entreprise: Yup.string()
                 .max(64)
-                /**
-                 * @see https://krzysztofzuraw.com/blog/2020/yup-validation-two-fields
-                 */
                 .test(
                     'ouInclusifEntrNom', // test name
                     'Au moins l\'un des champs entreprise et nom doit être rempli', // validation message to the user
@@ -99,9 +101,6 @@ export default class CreationCommande extends React.Component {
 
             nom: Yup.string()
                 .max(64)
-                /**
-                 * @see https://krzysztofzuraw.com/blog/2020/yup-validation-two-fields
-                 */
                 .test(
                     'ouInclusifEntrNom', // test name
                     'Au moins l\'un des champs entreprise et nom doit être rempli', // validation message to the user
@@ -122,9 +121,6 @@ export default class CreationCommande extends React.Component {
 
             telephone: Yup.string()
                 .max(32)
-                /**
-                 * @see https://krzysztofzuraw.com/blog/2020/yup-validation-two-fields
-                 */
                 .test(
                     'ouInclusifEntrTelCourriel', // test name
                     'Le client n\'a présentement aucune information de contact', // validation message to the user
@@ -141,9 +137,6 @@ export default class CreationCommande extends React.Component {
             courriel: Yup.string()
                 .email()
                 .max(255)
-                /**
-                 * @see https://krzysztofzuraw.com/blog/2020/yup-validation-two-fields
-                 */
                 .test(
                     'ouInclusifEntrTelCourriel', // test name
                     'Le client n\'a présentement aucune information de contact', // validation message to the user
@@ -171,14 +164,13 @@ export default class CreationCommande extends React.Component {
                 .email()
                 .max(255)
                 .required(),
+            /* DÉBUT VALIDATION EN-TÊTE COMMANDE */
 
+            // Validation pour chaque produit
             produits: Yup.array().of(
                 Yup.object({
                     code: Yup.string()
                         .max(32)
-                        /**
-                         * @see https://krzysztofzuraw.com/blog/2020/yup-validation-two-fields
-                         */
                         .test(
                             'ouInclusifCodeDesc', // test name
                             'Au moins l\'un des champs code et description doit être rempli', // validation message to the user
@@ -194,9 +186,6 @@ export default class CreationCommande extends React.Component {
 
                     description: Yup.string()
                         .max(255)
-                        /**
-                         * @see https://krzysztofzuraw.com/blog/2020/yup-validation-two-fields
-                         */
                         .test(
                             'ouInclusifCodeDesc', // test name
                             'Au moins l\'un des champs code et description doit être rempli', // validation message to the user
@@ -227,7 +216,11 @@ export default class CreationCommande extends React.Component {
         });
     }
 
-    // Exécuté lorsque le composant est appelé
+    /**
+     * @author Alex Lajeunesse
+     * @function componentDidMount
+     * @description Exécuté lorsque le composant est appelé
+     */
     componentDidMount() {
         this.getCommande();
         this.getProduits();
@@ -241,11 +234,13 @@ export default class CreationCommande extends React.Component {
     async getCommande() {
         try {
             const response = await axios.get(`http://localhost:5000/api/commandes/${this.id}`);
+            // Succès
             console.log(response);
             // La réponse de l'API est enregistré dans le state
             this.setState({
                 commande: response.data
             });
+            // Erreur
         } catch (error) {
             console.error(error);
         }
@@ -259,17 +254,20 @@ export default class CreationCommande extends React.Component {
     async getProduits() {
         try {
             const response = await axios.get(`http://localhost:5000/api/produits/${this.id}`);
+            // Succès
             console.log(response);
             // La réponse de l'API est enregistré dans le state
             this.setState({
                 produits: response.data,
                 editing: true,
             });
+            // Erreur
         } catch (error) {
             console.error(error);
         }
     }
 
+    // Lorsque ses valeurs sont changées avec setState, un nouveau rendu est appelé
     state = {
         open: false,
         editing: false,
@@ -277,25 +275,32 @@ export default class CreationCommande extends React.Component {
         produits: [],
     }
 
-    // Lorsque l'utilisateur clique sur l'icône de suppression
+    /**
+     * @description Ouverture du popup
+     * @see https://material-ui.com/components/dialogs/#confirmation-dialogs
+     */
     handleClickOpen() {
         this.setState({
             open: true
         });
     };
 
-    // Lorsque l'utilisateur ferme l'Alert de suppression
+    /**
+     * @description Fermeture du popup
+     * @see https://material-ui.com/components/dialogs/#confirmation-dialogs
+     */
     handleClickClose() {
         this.setState({
             open: false
         });
+        // Redirection vers l'accueil
         window.location.replace("/");
     };
 
     /**
      * @author Alex Lajeunesse
      * @function render
-     * @description Affiche l'interface.
+     * @description Affiche l'interface de la page et prépare le formulaire.
      * @see https://www.youtube.com/watch?v=FD50LPJ6bjE pour Formik et TextField
      * @see https://formik.org/docs/examples/field-arrays pour les produits
      */
@@ -333,6 +338,7 @@ export default class CreationCommande extends React.Component {
             );
         }
 
+        // Valeurs initiales du formulaire
         var initialValues = undefined;
 
         if (this.state.editing) {
@@ -346,6 +352,7 @@ export default class CreationCommande extends React.Component {
         } else {
             // Les valeurs initiales lors de la création d'une commande
             initialValues = {
+                // En-tête
                 commande: {
                     entreprise: '',
                     nom: '',
@@ -357,6 +364,7 @@ export default class CreationCommande extends React.Component {
                     commentaire: '',
                     attention: '',
                 },
+                // Produits
                 produits: [
                     {
                         code: '',
@@ -371,19 +379,25 @@ export default class CreationCommande extends React.Component {
             console.log("Mode création");
         }
 
+        // Affichage de l'interface
         return (
             <div>
+                {/* En-tête avec NavBar */}
                 <header>
                     <NavBar />
                 </header>
+                {/* Corps de la page */}
                 <div className="content">
+                    {/* Popup de confirmation */}
                     <div>
                         <Dialog
                             open={this.state.open}
                             onClose={this.handleClickClose}
                             aria-labelledby="alert-dialog-title"
                             aria-describedby="alert-dialog-description">
+                            {/* Titre */}
                             <DialogTitle id="alert-dialog-title">{"Commande créée avec succès !"}</DialogTitle>
+                            {/* Corps */}
                             <DialogContent>
                                 <DialogContentText id="alert-dialog-description">
                                     La commande a été créée avec succès ! Un courriel a été envoyé à la personne mentionnée.</DialogContentText>
@@ -394,6 +408,7 @@ export default class CreationCommande extends React.Component {
                         </Dialog>
                     </div>
                     <h1>Créer une commande</h1>
+                    {/* Formulaire de création (en-tête) */}
                     <Formik
                         validateOnChange
                         initialValues={initialValues}
@@ -441,9 +456,12 @@ export default class CreationCommande extends React.Component {
                         // Schéma de validation utilisé
                         validationSchema={this.schema}
                     >
+                        {/* Formulaire de création (interface) */}
                         {({ values, isSubmitting, handleChange, handleBlur, handleSubmit }) => (
                             <Form>
+                                {/* En-tête de la commande */}
                                 <Paper>
+                                    {/* Première ligne */}
                                     <div>
                                         <OrderTextField
                                             placeholder="Nom d'entreprise"
@@ -458,6 +476,7 @@ export default class CreationCommande extends React.Component {
                                             name="commande.nom"
                                         />
                                     </div>
+                                    {/* Deuxième ligne */}
                                     <div>
                                         <OrderTextField
                                             placeholder="Téléphone"
@@ -472,6 +491,7 @@ export default class CreationCommande extends React.Component {
                                             name="commande.po_client"
                                         />
                                     </div>
+                                    {/* Troisième ligne */}
                                     <div>
                                         <OrderTextField
                                             placeholder="*Vendeur"
@@ -482,6 +502,7 @@ export default class CreationCommande extends React.Component {
                                             name="commande.commentaire"
                                         />
                                     </div>
+                                    {/* Quatrième ligne */}
                                     <div>
                                         <FormControl className="order-form-item">
                                             <InputLabel htmlFor="attention">*Attention</InputLabel>
@@ -496,6 +517,7 @@ export default class CreationCommande extends React.Component {
                                     </div>
                                 </Paper>
                                 <h1>Produits</h1>
+                                {/* Produits de la commande */}
                                 <Paper>
                                     <FieldArray name="produits">
                                         {({ insert, remove, push }) => (
@@ -524,10 +546,12 @@ export default class CreationCommande extends React.Component {
                                                                     placeholder="Prix"
                                                                     type="text"
                                                                 />
+                                                                {/* Bouton de suppression de ligne */}
                                                                 <Button className="form-delete-button" disabled={isSubmitting} onClick={() => remove(index)}><b>X</b></Button>
                                                             </div>
                                                         </div>
                                                     ))}
+                                                {/* Bouton d'ajout de ligne */}
                                                 <Button className="form-button" disabled={isSubmitting}
                                                     onClick={() => push({ code: '', descrption: '', qte_demandee: '', prix: undefined })}
                                                 ><b>Ajouter un produit</b></Button>
@@ -535,6 +559,7 @@ export default class CreationCommande extends React.Component {
                                         )}
                                     </FieldArray>
                                 </Paper>
+                                {/* Section du bouton de sauvegarde */}
                                 <Paper className="paper-button">
                                     <div>
                                         <Button className="form-button" disabled={isSubmitting} type="submit"><b>Enregistrer</b></Button>

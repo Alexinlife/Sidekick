@@ -34,7 +34,7 @@ export default class Etats extends React.Component {
     componentDidMount() {
         this.getEtats();
     }
-    
+
     // Lorsque ses valeurs sont changées avec setState, un nouveau rendu est appelé
     state = {
         etats: []
@@ -48,11 +48,13 @@ export default class Etats extends React.Component {
     async getEtats() {
         try {
             const response = await axios.get('http://localhost:5000/api/etats/');
+            // Succès
             console.log(response);
             // La réponse de l'API est enregistré dans le state
             this.setState({
                 etats: response.data
             });
+            // Erreur
         } catch (error) {
             console.error(error);
         }
@@ -66,15 +68,19 @@ export default class Etats extends React.Component {
     render() {
         return (
             <div>
+                {/* En-tête avec NavBar */}
                 <header>
                     <NavBar />
                 </header>
+                {/* Corps de la page */}
                 <div className="content">
                     <h1>États</h1>
                     <p className="etats-note"><b>Attention : </b>Cette page n'affiche pas si une commande a été supprimée. Assurez-vous aussi de vérifier vos courriels !</p>
+                    {/* Tableau des états */}
                     <TableContainer className="etats" component={Paper}>
                         <Table className="table" aria-label="simple table">
                             <TableBody>
+                                {/* Lignes du tableau */}
                                 {this.state.etats.map((row) => (
                                     <TableRow key={row.id}>
                                         <TableCell align="center">Commande no. {row.commande_id} : {row.texte} ({row.date})</TableCell>

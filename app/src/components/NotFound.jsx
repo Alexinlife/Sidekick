@@ -12,6 +12,7 @@ import { Link } from 'react-router-dom';
 export default function NotFound() {
     return (
         <div>
+            {/* En-tête avec NavBar */}
             <header>
                 <NavBar />
             </header>

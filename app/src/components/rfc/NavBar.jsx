@@ -40,6 +40,7 @@ const useStyles = makeStyles((theme) => ({
  * @author Alex Lajeunesse
  * @function NavBar
  * @description Affiche la NavBar et la rend fonctionnelle via react-router-dom
+ * @see https://material-ui.com/components/app-bar/#app-bar
  */
 export default function NavBar() {
   const classes = useStyles();
@@ -47,17 +48,21 @@ export default function NavBar() {
     <div className={classes.root}>
       <AppBar className={classes.nav} position="static">
         <Toolbar>
+          {/* Liste des commandes */}
           <Link to="/">
             <IconButton edge="start" className={classes.listButton} color="inherit" aria-label="menu">
               <ListIcon />
             </IconButton>
           </Link>
+          {/* Création d'une commande */}
           <Link to="/create">
             <IconButton edge="start" className={classes.addButton} color="inherit" aria-label="menu">
               <AddIcon />
             </IconButton>
           </Link>
+          {/* Logo */}
           <img className={classes.logo} src={logo} alt="React" />
+          {/* Liste des notifications */}
           <Link to="/etats">
             <IconButton edge="end" className={classes.bellButton} color="inherit" aria-label="notifications">
               <BellIcon />
