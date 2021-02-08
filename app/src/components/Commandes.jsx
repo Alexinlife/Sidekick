@@ -111,7 +111,6 @@ class Commandes extends React.Component {
                   <TableCell align="center">Vendeur</TableCell>
                   <TableCell align="center">Date de modification</TableCell>
                   <TableCell align="center">Date de création</TableCell>
-                  <TableCell align="center">Dernier état</TableCell>
                 </TableRow>
               </TableHead>
               {/* Corps du tableau (lignes) */}
@@ -131,7 +130,6 @@ class Commandes extends React.Component {
                     <TableCell align="center">{row.po || "-"}</TableCell>
                     <TableCell align="center">{row.vendeur}</TableCell>
                     <TableCell align="center">{row.date_modification || "-"}</TableCell>
-                    <TableCell align="center">{row.date_creation}</TableCell>
                     <TableCell align="center">{row.date_creation}</TableCell>
                   </TableRow>
                 ))}
