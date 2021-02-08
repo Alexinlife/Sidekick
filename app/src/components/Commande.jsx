@@ -21,6 +21,8 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 // Material-UI Icons
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
+// react-router-dom
+import { Link } from 'react-router-dom';
 
 /**
  * @author Alex Lajeunesse
@@ -39,7 +41,6 @@ export default class Commande extends React.Component {
         this.id = props.match.params.id;
 
         // handle boutons icône
-        this.handleEdit = this.handleEdit.bind(this);
         this.handleDelete = this.handleDelete.bind(this);
 
         // handle popup
@@ -70,17 +71,6 @@ export default class Commande extends React.Component {
         open: false,
         read: false,
         done: false,
-    }
-
-    /**
-     * @author Alex Lajeunesse
-     * @function handleEdit
-     * @description Gestion de l'icône de modification
-     * @param {*} event Évènement React
-     */
-    handleEdit(event) {
-        event.preventDefault();
-        console.log("1");
     }
 
     /**
@@ -291,9 +281,11 @@ export default class Commande extends React.Component {
                                 {this.state.commande.map((row) => (
                                     <TableRow key={row.id}>
                                         <TableCell align="center">
-                                            <IconButton edge="start" className="tab-icons" color="inherit" aria-label="menu" onClick={this.handleEdit}>
-                                                <EditIcon />
-                                            </IconButton>
+                                            <Link to={`/edit/${row.id}`}>
+                                                <IconButton edge="start" className="tab-icons" color="inherit" aria-label="menu">
+                                                    <EditIcon />
+                                                </IconButton>
+                                            </Link>
                                             <IconButton edge="start" className="tab-icons" color="inherit" aria-label="menu" onClick={this.handleClickOpen}>
                                                 <DeleteIcon />
                                             </IconButton>
