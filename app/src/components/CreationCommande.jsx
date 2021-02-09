@@ -72,99 +72,101 @@ export default class CreationCommande extends React.Component {
          */
         this.schema = Yup.object({
             /* DÉBUT VALIDATION EN-TÊTE COMMANDE */
-            entreprise: Yup.string()
-                .max(64)
-                .test(
-                    'ouInclusifEntrNom', // test name
-                    'Au moins l\'un des champs entreprise et nom doit être rempli', // validation message to the user
-                    // it has to be function definition to use 'this'
-                    function (entreprise) {
-                        const { nom } = this.parent;
-                        if (entreprise || nom) {
-                            return true; // lorsqu'il y a au moins un champs de rempli
+            commande: Yup.object({
+                entreprise: Yup.string()
+                    .max(64)
+                    .test(
+                        'ouInclusifEntrNom', // test name
+                        'Au moins l\'un des champs entreprise et nom doit être rempli', // validation message to the user
+                        // it has to be function definition to use 'this'
+                        function (entreprise) {
+                            const { nom } = this.parent;
+                            if (entreprise || nom) {
+                                return true; // lorsqu'il y a au moins un champs de rempli
+                            }
+                            return false;
                         }
-                        return false;
-                    }
-                )
-                .test(
-                    'ouInclusifEntrTelCourriel', // test name
-                    'Le client n\'a présentement aucune information de contact', // validation message to the user
-                    // it has to be function definition to use 'this'
-                    function (entreprise) {
-                        const { telephone, courriel } = this.parent;
-                        if (entreprise || telephone || courriel) {
-                            return true; // lorsqu'il y a au moins un champs de rempli
+                    )
+                    .test(
+                        'ouInclusifEntrTelCourriel', // test name
+                        'Le client n\'a présentement aucune information de contact', // validation message to the user
+                        // it has to be function definition to use 'this'
+                        function (entreprise) {
+                            const { telephone, courriel } = this.parent;
+                            if (entreprise || telephone || courriel) {
+                                return true; // lorsqu'il y a au moins un champs de rempli
+                            }
+                            return false;
                         }
-                        return false;
-                    }
-                ),
+                    ),
 
-            nom: Yup.string()
-                .max(64)
-                .test(
-                    'ouInclusifEntrNom', // test name
-                    'Au moins l\'un des champs entreprise et nom doit être rempli', // validation message to the user
-                    // it has to be function definition to use 'this'
-                    function (nom) {
-                        const { entreprise } = this.parent;
-                        if (entreprise || nom) {
-                            return true; // lorsqu'il y a au moins un champs de rempli
+                nom: Yup.string()
+                    .max(64)
+                    .test(
+                        'ouInclusifEntrNom', // test name
+                        'Au moins l\'un des champs entreprise et nom doit être rempli', // validation message to the user
+                        // it has to be function definition to use 'this'
+                        function (nom) {
+                            const { entreprise } = this.parent;
+                            if (entreprise || nom) {
+                                return true; // lorsqu'il y a au moins un champs de rempli
+                            }
+                            return false;
                         }
-                        return false;
-                    }
-                ),
+                    ),
 
-            no_compte: Yup.number()
-                .max(169999999)
-                // eslint-disable-next-line
-                .typeError('Le champs ${path} doit contenir un nombre'),
+                no_compte: Yup.number()
+                    .max(169999999)
+                    // eslint-disable-next-line
+                    .typeError('Le champs ${path} doit contenir un nombre'),
 
-            telephone: Yup.string()
-                .max(32)
-                .test(
-                    'ouInclusifEntrTelCourriel', // test name
-                    'Le client n\'a présentement aucune information de contact', // validation message to the user
-                    // it has to be function definition to use 'this'
-                    function (telephone) {
-                        const { entreprise, courriel } = this.parent;
-                        if (entreprise || telephone || courriel) {
-                            return true; // lorsqu'il y a au moins un champs de rempli
+                telephone: Yup.string()
+                    .max(32)
+                    .test(
+                        'ouInclusifEntrTelCourriel', // test name
+                        'Le client n\'a présentement aucune information de contact', // validation message to the user
+                        // it has to be function definition to use 'this'
+                        function (telephone) {
+                            const { entreprise, courriel } = this.parent;
+                            if (entreprise || telephone || courriel) {
+                                return true; // lorsqu'il y a au moins un champs de rempli
+                            }
+                            return false;
                         }
-                        return false;
-                    }
-                ),
+                    ),
 
-            courriel: Yup.string()
-                .email()
-                .max(255)
-                .test(
-                    'ouInclusifEntrTelCourriel', // test name
-                    'Le client n\'a présentement aucune information de contact', // validation message to the user
-                    // it has to be function definition to use 'this'
-                    function (courriel) {
-                        const { entreprise, telephone } = this.parent;
-                        if (entreprise || telephone || courriel) {
-                            return true; // lorsqu'il y a au moins un champs de rempli
+                courriel: Yup.string()
+                    .email()
+                    .max(255)
+                    .test(
+                        'ouInclusifEntrTelCourriel', // test name
+                        'Le client n\'a présentement aucune information de contact', // validation message to the user
+                        // it has to be function definition to use 'this'
+                        function (courriel) {
+                            const { entreprise, telephone } = this.parent;
+                            if (entreprise || telephone || courriel) {
+                                return true; // lorsqu'il y a au moins un champs de rempli
+                            }
+                            return false;
                         }
-                        return false;
-                    }
-                ),
+                    ),
 
-            po_client: Yup.string()
-                .max(64),
+                po_client: Yup.string()
+                    .max(64),
 
-            vendeur: Yup.string()
-                .max(4)
-                .required(),
+                vendeur: Yup.string()
+                    .max(4)
+                    .required(),
 
-            commentaire: Yup.string()
-                .max(512),
+                commentaire: Yup.string()
+                    .max(512),
 
-            attention: Yup.string()
-                .email()
-                .max(255)
-                .required(),
-            /* DÉBUT VALIDATION EN-TÊTE COMMANDE */
+                attention: Yup.string()
+                    .email()
+                    .max(255)
+                    .required(),
+            }),
+            /* FIN VALIDATION EN-TÊTE COMMANDE */
 
             // Validation pour chaque produit
             produits: Yup.array().of(
