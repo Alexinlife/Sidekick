@@ -439,7 +439,7 @@ export default class CreationCommande extends React.Component {
                                 for (let p = 0; p < data.produits.length; p++) {
                                     productResponse[p] = await axios.post(productURL.toString(), {
                                         code: data.produits[p].code,
-                                        descrption: data.produits[p].descrption,
+                                        description: data.produits[p].description,
                                         qte_demandee: data.produits[p].qte_demandee,
                                         prix: data.produits[p].prix,
                                     });
